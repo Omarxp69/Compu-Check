@@ -3,25 +3,25 @@ import os
 from dotenv import load_dotenv
 from flask import flash
 # Cargar variables de entorno
-# load_dotenv()
-# def get_connection():
-#     conexion = mysql.connector.connect(
-#         host=os.environ.get('MYSQLHOST'),
-#         user=os.environ.get('MYSQLUSER'),
-#         password=os.environ.get('MYSQLPASSWORD'),
-#         database=os.environ.get('MYSQLDATABASE'),
-#         port=int(os.environ.get('MYSQLPORT', 3306)),
-#     )
-#     return conexion
-
+load_dotenv()
 def get_connection():
     conexion = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='Guada_xp69@3',
-        database='pythonflask'
+        host=os.environ.get('MYSQLHOST'),
+        user=os.environ.get('MYSQLUSER'),
+        password=os.environ.get('MYSQLPASSWORD'),
+        database=os.environ.get('MYSQLDATABASE'),
+        port=int(os.environ.get('MYSQLPORT', 3306)),
     )
     return conexion
+
+#def get_connection():
+    #conexion = mysql.connector.connect(
+        #host='localhost',
+        #user='root',
+        #password='Guada_xp69@3',
+        #database='pythonflask'
+    #)
+    #return conexion
 
 def insertar_usuario(nombre, apellido_paterno, apellido_materno, email, password):
     conn = get_connection()
