@@ -1306,50 +1306,6 @@ def procesar_foto(file, folder, prefijo, id_item):
 
 
 
-#if __name__ == "__main__":
-    #port = int(os.environ.get("PORT", 5000))
-    #app.run(host="0.0.0.0", port=port)
-
-
-import os
-from flask import Flask
-
-app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "clave_temporal_para_testing")
-
-# Ruta de prueba básica
-@app.route('/')
-def home():
-    return "¡La app está viva en Railway!"
-
-# Ruta de prueba de base de datos
-@app.route('/test-db')
-def test_db():
-    import mysql.connector
-    conn = mysql.connector.connect(
-        host=os.environ.get('MYSQLHOST'),
-        user=os.environ.get('MYSQLUSER'),
-        password=os.environ.get('MYSQLPASSWORD'),
-        database=os.environ.get('MYSQLDATABASE'),
-        port=int(os.environ.get('MYSQLPORT', 3306))
-    )
-    cursor = conn.cursor()
-    cursor.execute("SELECT NOW();")
-    result = cursor.fetchone()
-    conn.close()
-    return f"DB conectada, hora: {result}"
-
-# Ruta de prueba de ML / TensorFlow
-@app.route('/ml')
-def ml_test():
-    import tensorflow as tf
-    import numpy as np
-
-    # Operación mínima para confirmar TensorFlow
-    a = tf.constant([[1, 2], [3, 4]])
-    b = tf.constant([[5, 6], [7, 8]])
-    c = tf.matmul(a, b)
-    return f"TensorFlow funciona, resultado: {c.numpy().tolist()}"
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
