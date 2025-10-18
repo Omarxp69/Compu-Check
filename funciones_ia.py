@@ -4,6 +4,9 @@ from datetime import datetime
 from PIL import Image
 import numpy as np
 import joblib
+os.environ["CUDA_VISIBLE_DEVICES"] = "" 
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2" 
+
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from sklearn.ensemble import RandomForestClassifier
