@@ -21,8 +21,10 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)
 
 IMAGE_SIZE = (160, 160)
-base_model = MobileNetV2(include_top=False, pooling="avg", input_shape=(160, 160, 3))
+base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160, 160, 3))
 
+# Carga los pesos locales
+base_model.load_weights('model_weights/mobilenet_v2.weights.h5')
 
 # ===== FUNCIONES DE PROCESAMIENTO =====
 

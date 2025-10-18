@@ -7,6 +7,8 @@ from werkzeug.utils import secure_filename
 import glob 
 from datetime import timedelta,datetime
 
+from tensorflow.keras.applications import MobileNetV2
+
 
 
 # -----Archivos de python--------
