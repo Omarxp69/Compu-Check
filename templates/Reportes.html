@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Salas</title>
+  <style>
+    fieldset.form-group {
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 14px rgba(16,24,40,0.05);
+    }
+
+    fieldset.form-group legend {
+      font-weight: 700;
+      color: var(--accent, #2563eb);
+      font-size: 20px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background: var(--accent, #2563eb);
+      color: white;
+      font-weight: 600;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e4db7;
+    }
+  </style>
+  
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li ><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li class="active"><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Crear Reporte</h1>
+      </header>
+      <section class="form-section">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form id="formReporte" action="/guardar_reporte" method="POST" enctype="multipart/form-data">
+          <fieldset class="form-group">
+            <legend>Subir Reporte</legend>
+
+            <!-- Selección del salón -->
+            <label for="id_salon">Salón:</label>
+            <select id="id_salon" name="id_salon" required>
+              <option value="">--Seleccionar Salon--</option>
+              {% for id, nombre in salones %}
+                <option value="{{ id }}">{{ nombre }}</option>
+              {% endfor %}
+            </select>
+
+            <!-- Selección de la computadora   disabled-->
+            <label for="computadora">Selecciona la computadora:</label>
+            <select id="computadora" name="computadora"  required>
+              <option value="">-- Primero selecciona un salón --</option>
+            </select>
+
+            <!-- Subida de fotos -->
+
+            <label>Foto de la Pantalla:</label>
+            <input type="file" id="foto_pantalla" name="foto_pantalla" accept="image/*" required>
+
+            <label>Foto del Teclado:</label>
+            <input type="file" id="foto_teclado" name="foto_teclado" accept="image/*" required>
+
+            <label>Foto del Mouse:</label>
+            <input type="file" id="foto_mouse" name="foto_mouse" accept="image/*" required>
+
+            <!-- Vista previa -->
+            <div class="preview" id="previewContainer"></div>
+
+            <!-- Comentarios -->
+            <label>Comentarios (opcional):</label>
+            <textarea name="comentarios" rows="3" placeholder="Describe el problema si existe..."></textarea>
+
+            <button type="submit" id="btnEnviar" >Hacer Reporte</button>
+          </fieldset>
+        </form>
+
+
+      </section>
+
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+
+<script>
+  const salonSelect = document.getElementById('id_salon');
+  const computadoraSelect = document.getElementById('computadora');
+  const btnEnviar = document.getElementById('btnEnviar');
+  const form = document.getElementById('formReporte');
+  const inputs = form.querySelectorAll('input[type="file"]');
+
+  // Cuando cambia el salón, cargar las computadoras correspondientes
+  salonSelect.addEventListener('change', () => {
+    const idSalon = salonSelect.value;
+
+    // Limpiar opciones anteriores
+    computadoraSelect.innerHTML = '<option value="">-- Selecciona una computadora --</option>';
+
+    if (!idSalon) {
+      computadoraSelect.disabled = true;
+      return;
+    }
+
+    // Fetch dinámico a la ruta Flask
+    fetch(`/obtener_computadoras/${idSalon}`)
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(([id, nombre]) => { // según tu estructura [id, nombre]
+          const option = document.createElement('option');
+          option.value = id;
+          option.textContent = nombre;
+          computadoraSelect.appendChild(option);
+        });
+        computadoraSelect.disabled = false;
+      })
+      .catch(error => console.error('Error al cargar computadoras:', error));
+  });
+
+
+
+  // Vista previa de imágenes
+  const previewContainer = document.getElementById('previewContainer');
+  inputs.forEach(input => {
+    input.addEventListener('change', () => {
+      previewContainer.innerHTML = '';
+      inputs.forEach(fileInput => {
+        if (fileInput.files.length > 0) {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(fileInput.files[0]);
+          img.style.width = '100px';
+          img.style.height = '100px';
+          img.style.objectFit = 'cover';
+          img.style.marginRight = '10px';
+          previewContainer.appendChild(img);
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+</html>

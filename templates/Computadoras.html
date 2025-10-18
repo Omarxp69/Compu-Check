@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Salas</title>
+  
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li class="active"><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Crear Computadora</h1>
+      </header>
+      <section class="form-section">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('computadoras') }}" method="POST" class="form-busqueda">
+
+          <!-- ================== PANTALLA ================== -->
+          <fieldset class="form-group">
+            <legend>Pantalla</legend>
+            <label for="pantalla_marca">Marca:</label>
+            <input type="text" id="pantalla_marca" name="pantalla_marca" placeholder="Ingresa la marca de la pantalla" required>
+
+            <label for="pantalla_estado">Estado:</label>
+            <select id="pantalla_estado" name="pantalla_estado">
+              <option value="">--Selecciona un Estado--</option>
+              <option value="operativa">Operativa</option>
+              <option value="en reparación">En reparación</option>
+              <option value="dañada">Dañada</option>
+            </select>
+          </fieldset>
+          <!-- ================== TECLADO ================== -->
+          <fieldset class="form-group">
+            <legend>Teclado</legend>
+            <label for="teclado_marca">Marca:</label>
+            <input type="text" id="teclado_marca" name="teclado_marca" placeholder="Ingresa la marca del teclado" required>
+
+            <label for="teclado_tipo">Tipo:</label>
+            <select id="teclado_tipo" name="teclado_tipo">
+              <option value="">--Selecciona el tipo de teclado--</option>
+              <option value="mecánico">Mecánico</option>
+              <option value="membrana">Membrana</option>
+              <option value="inalámbrico">Inalámbrico</option>
+              <option value="cableado">Cableado</option>
+            </select>
+              
+            <label for="teclado_estado">Estado:</label>
+            <select id="teclado_estado" name="teclado_estado">
+              <option value="">--Selecciona el estado del teclado--</option>
+              <option value="operativa">Operativa</option>
+              <option value="en reparación">En reparación</option>
+              <option value="dañada">Dañada</option>
+            </select>
+          </fieldset>
+
+          <!-- ================== MOUSE ================== -->
+          <fieldset class="form-group">
+            <legend>Mouse</legend>
+
+            
+            <label for="mouse_marca">Marca:</label>
+            <input type="text" id="mouse_marca" name="mouse_marca" placeholder="Ingresa la marca del mouse" required>
+
+            
+            <label for="mouse_tipo">Tipo:</label>
+            <select id="mouse_tipo" name="mouse_tipo">
+              <option value="">--Selecciona el tipo de mouse--</option>
+              <option value="óptico">Óptico</option>
+              <option value="láser">Láser</option>
+              <option value="inalámbrico">Inalámbrico</option>
+              <option value="cableado">Cableado</option>
+            </select>
+
+            <label for="mouse_estado">Estado:</label>
+            <select id="mouse_estado" name="mouse_estado">
+              <option value="">--Selecciona el estado del mouse--</option>
+              <option value="operativa">Operativa</option>
+              <option value="en reparación">En reparación</option>
+              <option value="dañada">Dañada</option>
+            </select>
+          </fieldset>
+
+          
+
+          <!-- ================== COMPUTADORA ================== -->
+          <fieldset class="form-group">
+            <legend>Computadora</legend>
+
+            
+            <label for="matricula">Matrícula:</label>
+            <input type="text" id="matricula" name="matricula" placeholder="Ingresar matrícula" required>
+
+            
+            <label for="marca">Marca:</label>
+            <input type="text" id="marca" name="marca" placeholder="Ingresar la marca" required>
+
+
+            <label for="sistema_operativo">Sistema Operativo:</label>
+            <select id="sistema_operativo" name="sistema_operativo" required>
+                  <option value="">--Sistema operativo--</option>
+                  <option value="Windows 11">Windows 11</option>
+                  <option value="Windows 10">Windows 10</option>
+                  <option value="Windows 8.1">Windows 8.1</option>
+                  <option value="Windows 7">Windows 7</option>
+                  <option value="Ubuntu">Ubuntu</option>
+                  <option value="Debian">Debian</option>
+                  <option value="Fedora">Fedora</option>
+                  <option value="Linux Mint">Linux Mint</option>
+                  <option value="macOS Ventura">macOS Ventura</option>
+                  <option value="macOS Monterey">macOS Monterey</option>
+                  <option value="Otro">Otro</option>
+            </select>
+
+
+
+
+      
+            <label for="estado_computadora">Estado:</label>
+            <select id="estado_computadora" name="estado_computadora">
+              <option value="">--Estado de la computadora--</option>
+              <option value="bueno">Bueno</option>
+              <option value="malo">Malo</option>
+              <option value="dañado">Dañado</option>
+            </select>
+
+            <label for="id_salon">Salón:</label>
+            <select id="id_salon" name="id_salon" required>
+              <option value="">--Seleccionar Salon--</option>
+              {% for id, nombre in salones %}
+                <option value="{{ id }}">{{ nombre }}</option>
+              {% endfor %}
+            </select>
+          </fieldset>
+          <button type="submit" style="width: 100%;">Registrar Computadora con Periféricos</button>
+        </form>
+      </section>
+
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

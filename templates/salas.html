@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Salas</title>
+  
+  <style>
+    fieldset.form-group {
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 14px rgba(16,24,40,0.05);
+    }
+
+    fieldset.form-group legend {
+      font-weight: 700;
+      color: var(--accent, #2563eb);
+      font-size: 20px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background: var(--accent, #2563eb);
+      color: white;
+      font-weight: 600;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e4db7;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+
+
+        <ul>
+          <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li class="active"><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+        
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Crear Salas</h1>
+      </header>
+      <section class="form-section">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('salas') }}" method="POST">
+          <fieldset class="form-group">
+            <legend>Agregar Nueva Sala</legend>
+            <label for="nombre_salon">Nombre de la Sala:</label>
+            <input type="text" id="nombre_salon" name="nombre_salon" required>
+
+            <label for="ubicacion">Ubicación:</label>
+            <input type="text" id="ubicacion" name="ubicacion" required>
+
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado">
+              <option value="activo" selected>Activo</option>
+              <option value="mantenimiento">Mantenimiento</option>
+              <option value="fuera de servicio">Fuera de Servicio</option>
+            </select>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="3" placeholder="Escribe una descripción breve de la sala..."></textarea>
+            
+            <button type="submit">Agregar Sala</button>
+          </fieldset>
+        </form>
+      </section>
+
+      
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

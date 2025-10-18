@@ -1,0 +1,181 @@
+/* ========================
+   Estilos generales
+======================== */
+/*background: linear-gradient(135deg, #000000, #000000);*/
+body {
+    background: radial-gradient(circle, #ffffff, #0f1724);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Para que el formulario no quede pegado al centro vertical */
+    padding: 40px 20px; /* agrega espacio superior e inferior */
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ========================
+   Contenedor del formulario
+======================== */
+form {
+    background-color: #0f1724;
+    padding: 50px 40px; /* más espacio para los campos adicionales */
+    border-radius: 12px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 550px; /* más ancho para formularios grandes */
+    box-sizing: border-box;
+}
+
+/* ========================
+   Título
+======================== */
+h2 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-size: 30px;
+}
+
+/* ========================
+   Etiquetas
+======================== */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #fcfcfc;
+}
+
+/* ========================
+   Inputs
+======================== */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 14px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+    border-color: #000000;
+    outline: none;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================
+   Botones
+======================== */
+button:not(.toggle-password) {
+    width: 100%;
+    padding: 14px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+button:not(.toggle-password):hover {
+    background-color: #727272;
+}
+
+/* Botón del ojo */
+.toggle-password {
+    flex: 0 0 auto;
+    margin-left: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #555555;
+    padding: 0;
+    line-height: 1;
+}
+
+/* ========================
+   Información de la app
+======================== */
+.app-info {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 25px;
+    font-size: 18px;
+}
+
+/* ========================
+   Mensajes flash
+======================== */
+.flash-container {
+    margin-bottom: 20px;
+}
+
+.flash-messages {
+    list-style: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+    font-size: 16px;
+    
+}
+
+.flash-messages li {
+    margin-bottom: 5px;
+}
+
+.flash-messages li:last-child {
+    margin-bottom: 0;
+}
+
+/* ========================
+   Contenedor de contraseña
+======================== */
+.password-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.password-container input {
+    flex: 1;
+    padding: 14px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #cccccc;
+    box-sizing: border-box;
+}
+
+/* ========================
+   Responsividad
+======================== */
+@media (max-width: 600px) {
+    form {
+        padding: 30px 20px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+        padding: 12px 10px;
+    }
+
+    button:not(.toggle-password) {
+        padding: 12px;
+    }
+}

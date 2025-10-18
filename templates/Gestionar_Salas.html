@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Gestionar_Salas</title>
+   <!--
+  <style>
+    form[method="get"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05)), var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 20px rgba(16,24,40,0.05);
+    }
+
+    form[method="get"] input[type="text"] {
+      flex: 1 1 200px;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(16,24,40,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 15px;
+      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
+    }
+
+    form[method="get"] input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    form[method="get"] select {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(16,24,40,0.15);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 15px;
+      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
+    }
+
+    form[method="get"] select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.1);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    form[method="get"] button {
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    form[method="get"] button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    /* Responsive para mobile */
+    @media (max-width: 700px) {
+      form[method="get"] {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+    /* ========================
+      Formulario actualizar usuario - expandido
+    ======================== */
+    form[method="post"] {
+      display: grid;
+      grid-template-rows: repeat(2, auto); /* 2 filas */
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* columnas automáticas */
+      gap: 10px 12px;
+      padding: 0; /* sin padding extra */
+      background: transparent; /* sin fondo */
+      box-shadow: none; /* sin sombra */
+      width: 100%; /* ocupa todo el ancho */
+      margin-bottom: 20px;
+    }
+
+    /* Labels sobre los inputs */
+    form[method="post"] label {
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* Inputs y selects simples */
+    form[method="post"] input,
+    form[method="post"] select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(16,24,40,0.15);
+      background: rgba(255,255,255,0.02); /* muy ligero para no parecer cuadro */
+      color: var(--text);
+      font-size: 14px;
+      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
+    }
+
+    form[method="post"] input:focus,
+    form[method="post"] select:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+    }
+
+    /* Botón ocupa toda la segunda fila */
+    form[method="post"] button {
+      grid-column: 1 / -1;
+      padding: 8px 16px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+
+    form[method="post"] button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    /* Responsive para pantallas pequeñas */
+    @media (max-width: 600px) {
+      form[method="post"] {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      form[method="post"] button {
+        grid-column: 1 / -1;
+      }
+    }
+
+    input[disabled] {
+      background: rgba(255,255,255,0.03);
+      cursor: not-allowed;
+      color: rgba(255,255,255,0.6);
+    }
+  </style>-->
+
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li class="active"><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Gestionar Salas</h1>
+      </header>
+      {% if user_role == 'admin' %}
+        <form method="post" action="{{ url_for('actualizar_sala') }}" class="form-actualizar">
+          <fieldset>
+            <legend>Modificar Estado de la Sala</legend>
+            <input type="hidden" id="edit_sala_id" name="sala_id">
+            <div>
+              <label>ID:</label>
+              <input type="text" id="edit_id" disabled>
+            </div>
+            <div>
+              <label>Nombre Sala:</label>
+              <input type="text" id="edit_nombre" disabled>
+            </div>
+            <div>
+              <label>Ubicación:</label>
+              <input type="text" id="edit_ubicacion" disabled>
+            </div>
+            <div>
+              <label>Cantidad Equipos:</label>
+              <input type="number" id="edit_cantidad" disabled>
+            </div>
+            <div>
+              <label>Estado:</label>
+              <select id="edit_estado" name="estado">
+                <option value="activo">Activo</option>
+                <option value="mantenimiento">Mantenimiento</option>
+                <option value="fuera de servicio">Fuera de servicio</option>
+              </select>
+            </div>
+            
+            <!-- Campo para contraseña del admin -->
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="submit">Actualizar Estado</button style="display:flex; gap:10px; margin-top:10px;">
+          </fieldset>
+        </form>
+
+        
+        <form method="post" id="form-eliminar-sala" action="{{ url_for('eliminar_sala') }}" class="form-actualizar">
+          <fieldset>
+            <legend>Eliminar Sala</legend>
+            <input type="hidden" id="delete_sala_id" name="sala_id">
+            <div>
+              <label>ID:</label>
+              <input type="text" id="delete_id" disabled>
+            </div>
+            <div>
+              <label>Nombre Sala:</label>
+              <input type="text" id="delete_nombre" disabled>
+            </div>
+            <div>
+              <label>Ubicación:</label>
+              <input type="text" id="delete_ubicacion" disabled>
+            </div>
+            <div>
+              <label>Cantidad Equipos:</label>
+              <input type="number" id="delete_cantidad" disabled>
+            </div>
+            <div>
+              <label>Estado:</label>
+              <input type="text" id="delete_estado" disabled>
+            </div>
+            <div>
+            <!-- Campo para contraseña del admin -->
+              <label>Contraseña del Admin:</label>
+              <input type="password" id="delete_admin_password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="submit" style="background:red; display:flex; gap:10px; margin-top:10px; justify-content: center;">Eliminar Sala</button>
+          </fieldset>
+        </form>
+
+
+
+
+
+
+      {% endif %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+
+      <form method="get" action="{{ url_for('gestionar_salas') }}" class="form-busqueda">
+        <fieldset>
+          <legend>Mostrar Salas</legend>
+          <label for="Buscar">Buscar:</label>
+          <input type="text" name="search" placeholder="Buscar por ID o Nombre del Sala" value="{{ search }}">
+          
+          <label for="filtro_columna">Ordenar por:</label>
+          <select name="filtro_columna" id="filtro_columna">
+              <option value="id_salon" {% if filtro_columna=='id_salon' %}selected{% endif %}>ID</option>
+              <option value="nombre_salon" {% if filtro_columna=='nombre_salon' %}selected{% endif %}>Nombre</option>
+              <option value="ubicacion" {% if filtro_columna=='ubicacion' %}selected{% endif %}>Ubicacion</option>
+              <option value="cantidad_equipos" {% if filtro_columna=='cantidad_equipos' %}selected{% endif %}>Cantidad de equipos</option>
+              <option value="estado" {% if filtro_columna=='estado' %}selected{% endif %}>Estado</option>
+              <option value="descripcion" {% if filtro_columna=='descripcion' %}selected{% endif %}>Descripcion</option>
+              <option value="fecha_creacion" {% if filtro_columna=='fecha_creacion' %}selected{% endif %}>Fecha de Creacion</option>
+              <option value="updated_at" {% if filtro_columna=='updated_at' %}selected{% endif %}>Fecha de Actualizacion</option>
+          </select>
+
+          <select name="orden" id="orden">
+              <option value="ASC" {% if orden=='ASC' %}selected{% endif %}>Ascendente</option>
+              <option value="DESC" {% if orden=='DESC' %}selected{% endif %}>Descendente</option>
+          </select>
+
+          <button type="submit">Aplicar</button>
+        </fieldset>
+      </form>
+
+
+
+      <table>
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Nombre Sala</th>
+                  <th>Ubicacion</th>
+                  <th>Cantidad de equipos</th>
+                  <th>Estado</th>
+                  <th>Descripcion</th>
+                  <th>Fecha de Creacion</th>
+                  <th>Fecha de Actualizacion</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for s in Salones %}
+            <tr class="sala-row" data-sala-id="{{ s[0] }}">
+                <td>{{ s[0] }}</td>
+                <td>{{ s[1] }}</td>
+                <td>{{ s[2] }}</td>
+                <td>{{ s[3] }}</td>
+                <td>{{ s[4] }}</td>
+                <td>{{ s[5] }}</td>
+                <td>{{ s[6].strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ s[7].strftime('%d/%m/%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      
+        
+      
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+<script>
+  const filas = document.querySelectorAll('.sala-row');
+  filas.forEach(fila => {
+    fila.addEventListener('click', () => {
+      const salaId = fila.dataset.salaId;
+
+      // Actualizar formulario de "Modificar Estado"
+      document.getElementById('edit_sala_id').value = salaId;
+      document.getElementById('edit_id').value = fila.cells[0].innerText;
+      document.getElementById('edit_nombre').value = fila.cells[1].innerText;
+      document.getElementById('edit_ubicacion').value = fila.cells[2].innerText;
+      document.getElementById('edit_cantidad').value = fila.cells[3].innerText;
+      document.getElementById('edit_estado').value = fila.cells[4].innerText.toLowerCase();
+
+      // Actualizar formulario de "Eliminar Sala"
+      document.getElementById('delete_sala_id').value = salaId;
+      document.getElementById('delete_id').value = fila.cells[0].innerText;
+      document.getElementById('delete_nombre').value = fila.cells[1].innerText;
+      document.getElementById('delete_ubicacion').value = fila.cells[2].innerText;
+      document.getElementById('delete_cantidad').value = fila.cells[3].innerText;
+      document.getElementById('delete_estado').value = fila.cells[4].innerText;
+    });
+  });
+
+  // Confirmación antes de eliminar
+  const formEliminar = document.getElementById('form-eliminar-sala');
+  formEliminar.addEventListener('submit', (e) => {
+    const password = document.getElementById('delete_admin_password').value.trim();
+
+    if (!password) return; // el required del input se encarga
+    const confirmar = confirm("¿Estás seguro de eliminar esta sala? Esta acción no se puede deshacer.");
+    if (!confirmar) e.preventDefault();
+  });
+</script>
+</html>

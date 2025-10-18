@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Gestionar_Usuarios</title>
+   <style>
+      /* Campos de ID */
+      td.id-field {
+        background-color: #cce5ff; /* azul claro */
+      }
+
+      /* Texto "Sin foto" en negritas */
+      td.no-photo {
+        font-weight: bold;
+      }
+</style>
+
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li class="active"><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Gestionar Perifericos</h1>
+      </header>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% if user_role == 'admin' %}
+        <!-- Modificar Perifericos -->
+        <form method="post" action="{{ url_for('actualizar_computadora') }}" id="form-editar-computadora" class="form-actualizar">
+          <fieldset>
+            <legend>Modificar Perifericos</legend>
+            <input type="hidden" id="edit_id_computadora_hidden" name="id_computadora">
+
+            <div>
+              <!-- Computadora -->
+              <label>ID Computadora:</label>
+              <input type="text" id="edit_id_computadora" name="id_computadora_display" readonly>
+            </div>
+
+            <div>
+              <label>Matrícula:</label>
+              <input type="text" id="edit_matricula" name="matricula" readonly>
+            </div>
+
+            <div>
+              <label>ID Salón:</label>
+              <input type="text" id="edit_id_salon" name="id_salon_display" readonly>
+            </div>
+
+            <div>
+              <label>Nombre del Salón:</label>
+              <input type="text" id="edit_nombre_salon" name="nombre_salon" readonly>
+            </div>
+          </fieldset>
+        </form>
+          <!-- Pantalla -->
+        <form method="post" action="{{ url_for('actualizar_pantalla') }}" id="form-editar-pantalla" enctype="multipart/form-data" class="form-actualizar">
+          <fieldset>
+            <legend>Pantalla</legend>
+            <input type="hidden" id="id_computadora_hidden_pantalla" name="id_computadora">
+            <input type="hidden" id="id_salon_hidden_pantalla" name="id_salon">
+
+            <div>
+              <label>ID Pantalla:</label>
+              <input type="text" id="edit_id_pantalla" name="pantalla_id" readonly>
+            </div>
+
+            <div>
+              <label>Marca Pantalla:</label>
+              <input type="text" id="edit_marca_pantalla" name="marca_pantalla">
+            </div>
+
+            <div>
+              <label>Estado Pantalla:</label>
+              <select id="edit_estado_pantalla" name="estado_pantalla">
+                <option value="operativa">Operativa</option>
+                <option value="en reparación">En reparación</option>
+                <option value="dañada">Dañada</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Subir nueva Foto:</label>
+              <input type="file" id="edit_foto_pantalla" name="foto_pantalla" accept="image/*">
+            </div>
+
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div> 
+            
+            <div>
+            </div> 
+            
+            <label class="foto-label">Foto Pantalla Actual:</label>
+            <img class="foto-preview" id="preview_foto_pantalla" src="" alt="Foto actual" width="150" style="display:none">
+            
+            <button type="submit">Actualizar Pantalla</button>
+          </fieldset>
+        </form>
+
+        <!-- Teclado -->
+        <form method="post" action="{{ url_for('actualizar_teclado') }}" id="form-editar-teclado" enctype="multipart/form-data" class="form-actualizar">
+          <fieldset>
+            <legend>Teclado</legend>
+            <input type="hidden" id="id_computadora_hidden_teclado" name="id_computadora">
+            <input type="hidden" id="id_salon_hidden_teclado" name="id_salon">
+
+            <div>
+              <label>ID Teclado:</label>
+              <input type="text" id="edit_id_teclado" name="teclado_id" readonly>
+            </div>
+            <div>
+              <label>Marca Teclado:</label>
+              <input type="text" id="edit_marca_teclado" name="marca_teclado" readonly>
+            </div>
+            <div>
+              <label>Tipo Teclado:</label>
+              <select id="edit_tipo_teclado" name="tipo_teclado">
+                <option value="mecánico">Mecánico</option>
+                <option value="membrana">Membrana</option>
+                <option value="inalámbrico">Inalámbrico</option>
+                <option value="cableado">Cableado</option>
+              </select>
+            </div>
+            <div>
+              <label>Estado Teclado:</label>
+              <select id="edit_estado_teclado" name="estado_teclado">
+                <option value="operativa">Operativa</option>
+                <option value="en reparación">En reparación</option>
+                <option value="dañada">Dañada</option>
+              </select>
+            </div>  
+            
+            <div>
+              <label>Subir nueva Foto:</label>
+              <input type="file" id="edit_foto_teclado" name="foto_teclado" accept="image/*">
+            </div>
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+
+            <label class="foto-label">Foto Teclado Actual:</label>
+            <img img class="foto-preview" id="preview_foto_teclado" src="" alt="Foto actual" width="150" style="display:none">
+
+
+
+
+            <button type="submit">Actualizar Teclado</button>
+          </fieldset>
+        </form>
+        <!-- Mouse -->
+        <form method="post" action="{{ url_for('actualizar_mouse') }}" id="form-editar-mouse" enctype="multipart/form-data" class="form-actualizar">
+          <fieldset>
+            <legend>Mouse</legend>
+            
+            <input type="hidden" id="id_computadora_hidden_mouse" name="id_computadora">
+            <input type="hidden" id="id_salon_hidden_mouse" name="id_salon">
+
+            <div>
+              <label>ID Mouse:</label>
+              <input type="text" id="edit_id_mouse" name="mouse_id" readonly>
+            </div>
+            <div>
+              <label>Marca Mouse:</label>
+              <input type="text" id="edit_marca_mouse" name="marca_mouse">
+            </div>
+            <div>
+              <label>Tipo Mouse:</label>
+              <select id="edit_tipo_mouse" name="tipo_mouse">
+                <option value="óptico">Óptico</option>
+                <option value="láser">Láser</option>
+                <option value="inalámbrico">Inalámbrico</option>
+                <option value="cableado">Cableado</option>
+              </select>
+            </div>
+            <div>
+              <label>Estado Mouse:</label>
+              <select id="edit_estado_mouse" name="estado_mouse">
+                <option value="operativa">Operativa</option>
+                <option value="en reparación">En reparación</option>
+                <option value="dañada">Dañada</option>
+              </select>
+            </div>
+            <div>
+              <label>Subir nueva Foto:</label>
+              <input type="file" id="edit_foto_mouse" name="foto_mouse" accept="image/*">
+            </div>
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            
+            <label class="foto-label">Foto Mouse Actual:</label>
+            <img  class="foto-preview" id="preview_foto_mouse" src="" alt="Foto actual" width="150" style="display:none">
+
+            <button type="submit">Actualizar Mouse</button>
+            </fieldset>
+        </form>
+        <!-- ///////////////////////////////////////////////////////////////////////// -->
+      {% endif %}
+      <!-- ///////////////////////////////////////////////////////////////////////// -->
+      <form method="get" action="{{ url_for('gestionar_perifericos') }}" class="form-busqueda">
+        <fieldset>
+          <legend>Buscar Perifericos de las Computadoras</legend>
+          <label for="Buscar">Buscar:</label>
+          <input type="text" name="search" placeholder="Buscar por ID, matrícula o marca" value="{{ search }}">
+          
+          <label for="filtro_columna">Ordenar por:</label>
+          <select name="filtro_columna" id="filtro_columna">
+              <option value="id_computadora" {% if filtro_columna=='id_computadora' %}selected{% endif %}>ID</option>
+              <option value="matricula" {% if filtro_columna=='matricula' %}selected{% endif %}>Matrícula</option>
+              <option value="marca" {% if filtro_columna=='marca' %}selected{% endif %}>Marca</option>
+              <option value="sistema_operativo" {% if filtro_columna=='sistema_operativo' %}selected{% endif %}>SO</option>
+              <option value="estado" {% if filtro_columna=='estado' %}selected{% endif %}>Estado</option>
+              <option value="fecha_adquisicion" {% if filtro_columna=='fecha_adquisicion' %}selected{% endif %}>Fecha de Adquisición</option>
+              <option value="id_salon" {% if filtro_columna=='id_salon' %}selected{% endif %}>ID Sala</option>
+              <option value="fecha_creacion" {% if filtro_columna=='fecha_creacion' %}selected{% endif %}>Fecha de Creación</option>
+              <option value="updated_at" {% if filtro_columna=='updated_at' %}selected{% endif %}>Fecha de Actualización</option>
+          </select>
+
+          <select name="orden" id="orden">
+              <option value="ASC" {% if orden=='ASC' %}selected{% endif %}>Ascendente</option>
+              <option value="DESC" {% if orden=='DESC' %}selected{% endif %}>Descendente</option>
+          </select>
+
+          <button type="submit">Aplicar</button>
+        </fieldset>
+      </form>
+      <table>
+          <thead>
+            <tr>
+              <th>ID Computadora</th>
+              <th>Matrícula</th>
+              <th>ID Salón</th>
+              <th>Nombre Salón</th>
+              
+              <!-- Pantalla -->
+              <th>ID Pantalla</th>
+              <th>Marca Pantalla</th>
+              <th>Estado Pantalla</th>
+              <th>Foto Pantalla</th>
+
+              <!-- Teclado -->
+              <th>ID Teclado</th>
+              <th>Marca Teclado</th>
+              <th>Tipo Teclado</th>
+              <th>Estado Teclado</th>
+              <th>Foto Teclado</th>
+
+              <!-- Mouse -->
+              <th>ID Mouse</th>
+              <th>Marca Mouse</th>
+              <th>Tipo Mouse</th>
+              <th>Estado Mouse</th>
+              <th>Foto Mouse</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in computadoras %}
+            <tr
+              data-id="{{ c.id_computadora }}"
+              data-id-salon="{{ c.id_salon }}">
+              <!--data-estado-pantalla="{{ c.estado_pantalla }}"
+              data-estado-teclado="{{ c.estado_teclado }}"
+              data-estado-mouse="{{ c.estado_mouse }}"-->
+        
+              <td class="id-field">{{ c.id_computadora }}</td>
+              <td>{{ c.matricula }}</td>
+              <td class="id-field">{{ c.id_salon }}</td>
+              <td>{{ c.nombre_salon }}</td>
+
+              <!-- Pantalla -->
+              <td class="id-field">{{ c.pantalla_id }}</td>
+              <td>{{ c.marca_pantalla }}</td>
+              <td>{{ c.estado_pantalla }}</td>
+              <td>
+                {% if c.foto_pantalla %}
+                  <img src="{{ url_for('static', filename=c.foto_pantalla) }}" alt="Pantalla {{ c.pantalla_id }}" width="100">
+                {% else %}
+                  Sin foto
+                {% endif %}
+              </td>
+              <!-- Teclado -->
+              <td class="id-field">{{ c.teclado_id }}</td>
+              <td>{{ c.marca_teclado }}</td>
+              <td>{{ c.tipo_teclado }}</td>
+              <td>{{ c.estado_teclado }}</td>
+              <td>
+                {% if c.foto_teclado %}
+                  <img src="{{ url_for('static', filename=c.foto_teclado) }}" alt="Teclado {{ c.teclado_id }}" width="100">
+                {% else %}
+                  Sin foto
+                {% endif %}
+              </td>
+
+              <!-- Mouse -->
+              <td class="id-field">{{ c.mouse_id }}</td>
+              <td>{{ c.marca_mouse }}</td>
+              <td>{{ c.tipo_mouse }}</td>
+              <td>{{ c.estado_mouse }}</td>
+              <td>
+                {% if c.foto_mouse %}
+                  <img src="{{ url_for('static', filename=c.foto_mouse) }}" alt="Mouse {{ c.mouse_id }}" width="100">
+                {% else %}
+                  Sin foto
+                {% endif %}
+              </td>
+
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filas = document.querySelectorAll("table tbody tr");
+
+    filas.forEach(fila => {
+      fila.addEventListener("click", () => {
+        const celdas = fila.querySelectorAll("td");
+
+        // =======================
+        // FORMULARIO COMPUTADORA
+        // =======================
+        const idComputadora = celdas[0].innerText.trim();
+        const matricula = celdas[1].innerText.trim();
+        const idSalon = celdas[2].innerText.trim();
+        const nombreSalon = celdas[3].innerText.trim();
+
+        document.getElementById("edit_id_computadora_hidden").value = idComputadora;
+        document.getElementById("edit_id_computadora").value = idComputadora;
+        document.getElementById("edit_matricula").value = matricula;
+        document.getElementById("edit_id_salon").value = idSalon;
+        document.getElementById("edit_nombre_salon").value = nombreSalon;
+
+        // =======================
+        // FORMULARIO PANTALLA
+        // =======================
+        const idPantalla = celdas[4].innerText.trim();
+        const marcaPantalla = celdas[5].innerText.trim();
+        const estadoPantalla = celdas[6].innerText.trim();
+
+        document.getElementById("id_computadora_hidden_pantalla").value = idComputadora;
+        document.getElementById("id_salon_hidden_pantalla").value = idSalon;
+        document.getElementById("edit_id_pantalla").value = idPantalla;
+        document.getElementById("edit_marca_pantalla").value = marcaPantalla;
+        document.getElementById("edit_estado_pantalla").value = estadoPantalla;
+
+        // Mostrar imagen de pantalla actual
+        const imgPantalla = celdas[7].querySelector("img");
+        const previewPantalla = document.getElementById("preview_foto_pantalla");
+        if (imgPantalla && imgPantalla.src) {
+          previewPantalla.src = imgPantalla.src;
+          previewPantalla.style.display = "block";
+        } else {
+          previewPantalla.src = "";
+          previewPantalla.style.display = "none";
+        }
+        document.getElementById("edit_foto_pantalla").value = "";
+
+        // =======================
+        // FORMULARIO TECLADO
+        // =======================
+        const idTeclado = celdas[8].innerText.trim();
+        const marcaTeclado = celdas[9].innerText.trim();
+        const tipoTeclado = celdas[10].innerText.trim();
+        const estadoTeclado = celdas[11].innerText.trim();
+
+        document.getElementById("id_computadora_hidden_teclado").value = idComputadora;
+        document.getElementById("id_salon_hidden_teclado").value = idSalon;
+        document.getElementById("edit_id_teclado").value = idTeclado;
+        document.getElementById("edit_marca_teclado").value = marcaTeclado;
+        document.getElementById("edit_tipo_teclado").value = tipoTeclado;
+        document.getElementById("edit_estado_teclado").value = estadoTeclado;
+
+        // Mostrar imagen de teclado actual
+        const imgTeclado = celdas[12].querySelector("img");
+        const previewTeclado = document.getElementById("preview_foto_teclado");
+        if (imgTeclado && imgTeclado.src) {
+          previewTeclado.src = imgTeclado.src;
+          previewTeclado.style.display = "block";
+        } else {
+          previewTeclado.src = "";
+          previewTeclado.style.display = "none";
+        }
+        document.getElementById("edit_foto_teclado").value = "";
+
+        
+
+        // =======================
+        // FORMULARIO MOUSE
+        // =======================
+        const idMouse = celdas[13].innerText.trim();
+        const marcaMouse = celdas[14].innerText.trim();
+        const tipoMouse = celdas[15].innerText.trim();
+        const estadoMouse = celdas[16].innerText.trim();
+
+        document.getElementById("id_computadora_hidden_mouse").value = idComputadora;
+        document.getElementById("id_salon_hidden_mouse").value = idSalon;
+        document.getElementById("edit_id_mouse").value = idMouse;
+        document.getElementById("edit_marca_mouse").value = marcaMouse;
+        document.getElementById("edit_tipo_mouse").value = tipoMouse;
+        document.getElementById("edit_estado_mouse").value = estadoMouse;
+
+        // Mostrar imagen de mouse actual
+        const imgMouse = celdas[17].querySelector("img");
+        const previewMouse = document.getElementById("preview_foto_mouse");
+        if (imgMouse && imgMouse.src) {
+          previewMouse.src = imgMouse.src;
+          previewMouse.style.display = "block";
+        } else {
+          previewMouse.src = "";
+          previewMouse.style.display = "none";
+        }
+        document.getElementById("edit_foto_mouse").value = "";
+
+        // =======================
+        // EFECTO VISUAL FILA SELECCIONADA
+        // =======================
+        filas.forEach(f => f.classList.remove("fila-seleccionada"));
+        fila.classList.add("fila-seleccionada");
+      });
+    });
+  });
+</script>
+
+
+</html>
+
+

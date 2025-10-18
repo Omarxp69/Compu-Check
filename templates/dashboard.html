@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  {% if user_role == 'admin' %}
+    <title>Compuchek - Admin-Dashboard</title>
+  {% elif user_role == 'moderador' %}
+    <title>Compuchek - Mod-Dashboard</title>
+  {% elif user_role == 'user' %}
+    <title>Compuchek - User-Dashboard</title>
+  {% endif %}
+
+  
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li class="active"><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1>Bienvenido, {{ user_name }}</h1>
+        <p>{{ user_message }}</p>
+      </header>
+      <section class="dashboard-info">
+      <h2>Descripción de cada sección:</h2>
+      {% if user_role == 'admin' %}
+        <ul>
+          <li><strong>🛋️ Salas:</strong> Visualiza todas las salas registradas en el sistema.</li>
+          <li><strong>🛠️ Gestionar Salas:</strong> Permite crear, editar o eliminar salas.</li>
+          <li><strong>💻 Computadoras:</strong> Muestra todas las computadoras registradas en cada sala.</li>
+          <li><strong>🛠️ Gestionar Computadoras:</strong> Permite agregar, modificar o eliminar computadoras y sus componentes.</li>
+          <li><strong>👥 Gestionar Usuarios:</strong> Administra los usuarios del sistema, asignando roles y permisos.</li>
+          <li><strong>📊 Reportes:</strong> Visualiza estadísticas y reportes generales del sistema.</li>
+        </ul>
+      {% elif user_role == 'moderador' %}
+        <ul>
+          <li><strong>📋 Revisar reportes:</strong> Evalúa los reportes enviados por los usuarios.</li>
+          <li><strong>⚙️ Gestionar contenido:</strong> Modifica o aprueba contenido del sistema según tus permisos.</li>
+        </ul>
+      {% elif user_role == 'user' %}
+        <ul>
+          <li><strong>💻 Mis computadoras:</strong> Consulta la información de las computadoras asignadas a ti o a tu sala.</li>
+          <li><strong>📝 Enviar reporte:</strong> Envía reportes sobre incidencias o problemas con computadoras o salas.</li>
+        </ul>
+      {% endif %}
+    </section>
+
+      
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

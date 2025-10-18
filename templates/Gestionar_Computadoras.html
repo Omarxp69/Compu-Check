@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Gestionar_Usuarios</title>
+
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li class="active"><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Gestionar Computadoras</h1>
+      </header>
+      {% if user_role == 'admin' %}
+        
+        <form method="post" action="{{ url_for('actualizar_computadora') }}" class="form-actualizar">
+          <fieldset>
+            <legend>Modificar Computadora</legend>
+            <input type="hidden" id="edit_computadora_id" name="id_computadora">
+
+            <div>
+              <label>ID:</label>
+              <input type="text" id="edit_id_computadora" disabled>
+            </div>
+            <div>
+              <label>Matrícula:</label>
+              <input type="text" id="edit_matricula" disabled>
+            </div>
+            <div>
+              <label >Sistema Operativo:</label>
+              <select id="edit_sistema_operativo" name="sistema_operativo" required>
+                    <option value="">--Selecciona un sistema operativo--</option>
+                    <option value="Windows 11">Windows 11</option>
+                    <option value="Windows 10">Windows 10</option>
+                    <option value="Windows 8.1">Windows 8.1</option>
+                    <option value="Windows 7">Windows 7</option>
+                    <option value="Ubuntu">Ubuntu</option>
+                    <option value="Debian">Debian</option>
+                    <option value="Fedora">Fedora</option>
+                    <option value="Linux Mint">Linux Mint</option>
+                    <option value="macOS Ventura">macOS Ventura</option>
+                    <option value="macOS Monterey">macOS Monterey</option>
+                    <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div>
+              <label>Estado PC:</label>
+              <select id="edit_estado_pcMalo" name="estado_pc">
+                  <option value="bueno">Bueno</option>
+                  <option value="malo"></option>
+                  <option value="dañado">Dañado</option>
+              </select>
+            </div>
+            <div>
+              <label>ID Salon:</label>
+              <input type="text" id="edit_id_salon" name="id_salon" disabled>
+            </div>
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="submit" style="display:flex; gap:10px; margin-top:10px; justify-content: center;">Actualizar Computadora</button>
+          </fieldset>
+        </form>
+        {% endif %}
+
+      {% if user_role == 'admin' %}
+        <form method="post" id="form-eliminar-computadora" action="{{ url_for('eliminar_computadora') }}" class="form-actualizar">
+          <fieldset>
+            <legend>Eliminar Computadora</legend>   
+            <input type="hidden" id="delete_computadora_id" name="id_computadora">
+            <div>
+            <label>ID:</label>
+            <input type="text" id="delete_id_computadora" disabled>
+            </div>
+            <div>
+              <label>ID Salon:</label>
+              <input type="text" id="delete_id_salon" name="id_salon" readonly>
+            </div>
+            <div>
+              <label>Contraseña del Admin:</label>
+              <input type="password" name="admin_password" placeholder="Ingresa tu contraseña" required>
+            </div>
+
+              <button type="submit" style="background:red; display:flex; gap:10px; margin-top:10px; justify-content: center;">Eliminar Computadora</button>
+          </fieldset> 
+        </form>
+        {% endif %}
+
+      
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <!-- ///////////////////////////////////////////////////////////////////////// -->
+      <form method="get" action="{{ url_for('gestionar_computadoras') }}" class="form-busqueda"> 
+        <fieldset>
+          <legend>Mostrar Computadoras</legend>
+          <label for="Buscar">Buscar:</label>
+          <input type="text" name="search" placeholder="Buscar por ID, matrícula o marca" value="{{ search }}">
+          <label for="filtro_columna">Ordenar por:</label>
+          <select name="filtro_columna" id="filtro_columna">
+              <option value="id_computadora" {% if filtro_columna=='id_computadora' %}selected{% endif %}>ID</option>
+              <option value="matricula" {% if filtro_columna=='matricula' %}selected{% endif %}>Matrícula</option>
+              <option value="marca" {% if filtro_columna=='marca' %}selected{% endif %}>Marca</option>
+              <option value="sistema_operativo" {% if filtro_columna=='sistema_operativo' %}selected{% endif %}>SO</option>
+              <option value="estado" {% if filtro_columna=='estado' %}selected{% endif %}>Estado</option>
+              <option value="fecha_adquisicion" {% if filtro_columna=='fecha_adquisicion' %}selected{% endif %}>Fecha de Adquisición</option>
+              <option value="id_salon" {% if filtro_columna=='id_salon' %}selected{% endif %}>ID Sala</option>
+              <option value="fecha_creacion" {% if filtro_columna=='fecha_creacion' %}selected{% endif %}>Fecha de Creación</option>
+              <option value="updated_at" {% if filtro_columna=='updated_at' %}selected{% endif %}>Fecha de Actualización</option>
+          </select>
+
+          <select name="orden" id="orden">
+              <option value="ASC" {% if orden=='ASC' %}selected{% endif %}>Ascendente</option>
+              <option value="DESC" {% if orden=='DESC' %}selected{% endif %}>Descendente</option>
+          </select>
+
+          <button type="submit">Aplicar</button>
+        </fieldset>
+      </form>
+
+      <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Matrícula</th>
+              <th>Marca PC</th>
+              <th>Sistema Operativo</th>
+              <th>Estado PC</th>
+              <th>ID Salón</th>
+              <th>Nombre Salón</th>
+              <!-- Pantalla -->
+              <th>ID Pantalla</th>
+              <!-- Teclado -->
+              <th>ID Teclado</th>
+              <!-- Mouse -->
+              <th>ID Mouse</th>
+
+
+              <th>Fecha Creación</th>
+              <th>Última Actualización</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in computadoras %}
+              <tr
+                data-id="{{ c.id_computadora }}"
+                data-matricula="{{ c.matricula }}"
+                data-sistema="{{ c.sistema_operativo }}"
+                data-estado-pc="{{ c.estado_pc }}"
+                data-id-salon="{{ c.id_salon }}">
+                <!--data-estado-pantalla="{{ c.estado_pantalla }}"
+                data-estado-teclado="{{ c.estado_teclado }}"
+                data-estado-mouse="{{ c.estado_mouse }}"-->
+          
+                <td>{{ c.id_computadora }}</td>
+                <td>{{ c.matricula }}</td>
+                <td>{{ c.marca_pc }}</td>
+                <td>{{ c.sistema_operativo }}</td>
+                <td>{{ c.estado_pc }}</td>
+                <td>{{ c.id_salon }}</td>
+                <td>{{ c.nombre_salon }}</td>
+
+                <!-- Pantalla -->
+                <td>{{ c.pantalla_id }}</td>
+                <!-- Teclado -->
+                <td>{{ c.teclado_id }}</td>
+                <!-- Mouse -->
+                <td>{{ c.mouse_id }}</td>
+
+
+                <td>{{ c.fecha_creacion_pc }}</td>
+                <td>{{ c.actualizado_pc }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+      
+        
+      
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+<script>
+  const filas = document.querySelectorAll('table tbody tr');
+  filas.forEach(fila => {
+    fila.addEventListener('click', () => {
+      const id = fila.cells[0].innerText;
+      const matricula = fila.cells[1].innerText;
+      const sistema = fila.cells[3].innerText;
+      const estado = fila.cells[4].innerText.toLowerCase();
+      const idSalon = fila.cells[5].innerText; // 👈 Capturamos el id_salon
+
+      const pantallaInfo = fila.cells[7].innerText.split('(');
+      const estadoPantalla = pantallaInfo[1] ? pantallaInfo[1].replace(')', '').trim().toLowerCase() : 'operativa';
+
+      const tecladoInfo = fila.cells[8].innerText.split('(');
+      const tecladoParts = tecladoInfo[1] ? tecladoInfo[1].replace(')', '').split(',').map(p => p.trim()) : [];
+      const estadoTeclado = tecladoParts[1] ? tecladoParts[1].toLowerCase() : 'operativa';
+
+      const mouseInfo = fila.cells[9].innerText.split('(');
+      const mouseParts = mouseInfo[1] ? mouseInfo[1].replace(')', '').split(',').map(p => p.trim()) : [];
+      const estadoMouse = mouseParts[1] ? mouseParts[1].toLowerCase() : 'operativa';
+
+      // ----- Formulario Modificar -----
+      document.getElementById('edit_computadora_id').value = id;
+      document.getElementById('edit_id_computadora').value = id;
+      document.getElementById('edit_matricula').value = matricula;
+      document.getElementById('edit_sistema_operativo').value = sistema;
+
+      // ⚠️ Cambio aquí: el id correcto es 'edit_estado_pcMalo'
+      document.getElementById('edit_estado_pcMalo').value = estado; // 👈 Corregido
+
+      document.getElementById('edit_id_salon').value = idSalon; // 👈 Guardamos id_salon
+
+      // ----- Formulario Eliminar -----
+      document.getElementById('delete_computadora_id').value = id;
+      document.getElementById('delete_id_computadora').value = id;
+      document.getElementById('delete_id_salon').value = idSalon; // 👈 Guardamos id_salon
+    });
+  });
+
+  // Confirmación antes de eliminar
+  const formEliminar = document.getElementById('form-eliminar-computadora');
+  formEliminar.addEventListener('submit', (e) => {
+    const confirmar = confirm("¿Estás seguro de eliminar esta computadora? Esta acción no se puede deshacer.");
+    if (!confirmar) e.preventDefault();
+  });
+</script>
+
+
+</html>

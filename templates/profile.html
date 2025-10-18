@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Editar Perfil</title>
+  <style>
+    section.cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    form label {
+      font-weight: bold;
+    }
+
+    form input, 
+    form select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+    }
+    .btn-delete {
+    background-color: #f44336; /* rojo */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    } 
+    .btn-save { background-color: #4CAF50; }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+      <ul>
+        <li><a href="/">🏠 Inicio</a></li>
+         {% if user_role == 'admin' %}
+         <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li class="active"><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1>Editar Perfil</h1>
+        <p>Actualiza solo lo que necesites. Cada opción es independiente.</p>
+      </header>
+
+      <!-- Formulario de ajustes -->
+      <section class="cards">
+
+        <!-- Foto de perfil -->
+        <div class="card">
+          <form action="/update_profile" method="POST" enctype="multipart/form-data">
+            <label for="foto_perfil">🖼️ Foto de perfil:</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
+            <button type="submit" class="btn-save">💾 Actualizar foto</button>
+          </form>
+        </div>
+
+        <!-- Fecha de nacimiento -->
+        <div class="card">
+          <form action="/update_profile" method="POST">
+            <label for="fecha_nacimiento">🎂 Fecha de nacimiento:</label>
+            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+            <button type="submit" class="btn-save">💾 Actualizar fecha</button>
+          </form>
+        </div>
+
+        <!-- Género -->
+        <div class="card">
+          <form action="/update_profile" method="POST">
+            <label for="genero">⚧️ Género:</label>
+            <select id="genero" name="genero">
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+              <option value="otro">Otro</option>
+            </select>
+            <button type="submit" class="btn-save">💾 Actualizar género</button>
+          </form>
+        </div>
+        <!-- Sección para eliminar cuenta -->
+        <div class="card">
+          <form action="/delete_account" method="POST" onsubmit="return confirm('⚠️ ¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')">
+            <h3>❌ Eliminar cuenta</h3>
+            <p>Esta acción eliminará tu cuenta permanentemente.</p>
+            <button type="submit" class="btn-delete">🗑️ Eliminar cuenta</button>
+          </form>
+        </div>
+
+
+      </section>
+
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

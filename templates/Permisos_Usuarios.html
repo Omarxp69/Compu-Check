@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="stylesheet" href="../static/css/index_style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compuchek - Salas</title>
+  <style>
+    fieldset.form-group {
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 14px rgba(16,24,40,0.05);
+    }
+
+    fieldset.form-group legend {
+      font-weight: 700;
+      color: var(--accent, #2563eb);
+      font-size: 20px;
+      padding: 0 10px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      background: var(--accent, #2563eb);
+      color: white;
+      font-weight: 600;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e4db7;
+    }
+    .tablas-lado-a-lado {
+      display: flex;
+      gap: 20px; /* espacio entre tablas */
+      flex-wrap: wrap; /* se acomodan en vertical si la pantalla es pequeña */
+    }
+
+    .tabla-wrapper {
+      flex: 1; /* ambas tablas ocupan el mismo ancho */
+      min-width: 300px; /* evita que se rompan en pantallas pequeñas */
+    }
+    .filtro-form {
+      display: flex;
+      flex-wrap: wrap; /* se acomoda en vertical si la pantalla es muy pequeña */
+      gap: 10px; /* espacio entre los elementos */
+      align-items: center; /* alinea verticalmente los elementos */
+    }
+
+    .filtro-form input,
+    .filtro-form select {
+      flex: 1; /* ocupa el máximo espacio disponible */
+      min-width: 120px; /* ancho mínimo para no romper el diseño */
+    }
+
+    .filtro-form button {
+      flex: none; /* no crecerá, mantiene tamaño de contenido */
+    }
+    ####
+    .filtros-combinados form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* ocupa todo el ancho de izquierda a derecha */
+    width: 100%;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid rgba(37, 99, 235, 0.2);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.7);
+    box-shadow: 0 4px 14px rgba(16,24,40,0.05);
+    }
+
+    .filtros-combinados form label {
+    font-weight: 600;
+    color: var(--accent, #2563eb);
+    white-space: nowrap;
+   }
+
+    .filtros-combinados form input,
+    .filtros-combinados form select {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      background-color: white;
+      width: 100%;
+      max-width: 200px; /* controla que no se estiren demasiado */
+    }
+
+    .filtros-combinados form button {
+      flex-basis: 100%;
+      width: auto;
+      align-self: stretch;
+    }
+
+    .filtros-combinados form button:hover {
+      background: #1e4db7;
+      transform: translateY(-2px);
+    }
+
+    /* Responsivo: solo se apila en pantallas pequeñas */
+    @media (max-width: 1100px) {
+      .filtros-combinados form {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+    }
+    .form-busqueda .campo {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 200px;
+      min-width: 200px;
+    }
+
+    .form-busqueda label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    
+        
+    
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        {% if user_profile_pic %}
+          <img src="{{ url_for('static', filename=user_profile_pic) }}" alt="Foto de perfil" class="profile-img">
+        {% else %}
+          <div class="profile-img">👤</div>
+        {% endif %}
+        <span>{{ user_name }}</span>
+      </div>
+
+      <h2>Compuchek</h2>
+        <ul>
+          <li><a href="/">🏠 Inicio</a></li>
+        {% if user_role == 'admin' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Salas">🛋️ Salas</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li><a href="/Computadoras">💻Computadoras</a></li>
+          <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
+          <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
+          <li class="active"><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'moderador' %}
+          <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
+        {% elif user_role == 'user' %}
+          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+        {% endif %}
+        <li><a href="/profile">✏️ Editar Perfil</a></li>
+        <li><a href="/logout">🚪 Cerrar sesión</a></li>
+      </ul>
+    </aside>
+        
+
+    <!-- Main -->
+    <main class="dashboard-main">
+      <header>
+        <h1 class="titulo_w">Crear Permisos</h1>
+      </header>
+      <section class="form-section">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('permisos_usuarios') }}" method="POST" class="form-actualizar">
+          <fieldset>
+            <legend>Permisos de usuario</legend>
+
+            <!-- ID Usuario -->
+             <div>
+              <label for="usuario_id">ID Usuario:</label>
+              <input type="text" id="usuario_id" name="id_usuario" readonly>
+            </div>
+
+            <!-- ID Salón -->
+            <div>
+              <label for="salon_id">ID Salón:</label>
+              <input type="text" id="salon_id" name="id_salon" readonly>
+            </div>
+
+            <button type="submit">Asignar Salón</button>
+          </fieldset>
+        </form>
+      
+      </section>
+
+      <div class="form-section filtros-combinados">
+          <form method="get" action="{{ url_for('permisos_usuarios') }}" class="form-busqueda">
+            <fieldset>
+              <legend>Filtros de Usuarios y Salones</legend>
+              <!-- Filtro Usuarios -->
+              <label for="search_usuarios">Buscar Usuarios</label>
+              <input type="text" id="search_usuarios" name="search_usuarios" placeholder="ID o Email" value="{{ request.args.get('search_usuarios','') }}">
+              
+              <select name="filtro_columna_usuarios">
+                  <option value="id" {% if request.args.get('filtro_columna_usuarios')=='id' %}selected{% endif %}>ID</option>
+                  <option value="nombre" {% if request.args.get('filtro_columna_usuarios')=='nombre' %}selected{% endif %}>Nombre</option>
+                  <option value="email" {% if request.args.get('filtro_columna_usuarios')=='email' %}selected{% endif %}>Email</option>
+              </select>
+              <select name="orden_usuarios">
+                  <option value="ASC" {% if request.args.get('orden_usuarios')=='ASC' %}selected{% endif %}>Ascendente</option>
+                  <option value="DESC" {% if request.args.get('orden_usuarios')=='DESC' %}selected{% endif %}>Descendente</option>
+              </select>
+
+              <!-- Filtro Salones -->
+              <label for="search_salones">Buscar Salones</label> 
+              <input type="text" id="search_salones" name="search_salones" placeholder="ID o Nombre" value="{{ request.args.get('search_salones','') }}">
+              <select name="filtro_columna_salones">
+                  <option value="id_salon" {% if request.args.get('filtro_columna_salones')=='id_salon' %}selected{% endif %}>ID</option>
+                  <option value="nombre_salon" {% if request.args.get('filtro_columna_salones')=='nombre_salon' %}selected{% endif %}>Nombre</option>
+              </select>
+              <select name="orden_salones">
+                  <option value="ASC" {% if request.args.get('orden_salones')=='ASC' %}selected{% endif %}>Ascendente</option>
+                  <option value="DESC" {% if request.args.get('orden_salones')=='DESC' %}selected{% endif %}>Descendente</option>
+              </select>
+              <!-- Botón -->
+              <button type="submit">Aplicar Filtros</button>
+            </fieldset>
+          </form>
+      </div>
+
+
+
+      
+
+
+      
+      
+      <div class="form-section">
+        <h2>Usuarios y Salones</h2>
+        <div class="tablas-lado-a-lado">
+          <!-- Tabla Usuarios -->
+          <div class="tabla-wrapper">
+            <h3>Usuarios</h3>
+            <table id="tabla_usuarios">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for u in usuarios %}
+                <tr data-id="{{ u[0] }}">
+                  <td>{{ u[0] }}</td>
+                  <td>{{ u[1] }}</td>
+                  <td>{{ u[2] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tabla Salones -->
+          <div class="tabla-wrapper">
+            <h3>Salones</h3>
+            <table id="tabla_salones">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for s in salones %}
+                <tr data-id="{{ s[0] }}">
+                  <td>{{ s[0] }}</td>
+                  <td>{{ s[1] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      
+      <footer>
+        &copy; 2025 Compuchek. Todos los derechos reservados.
+      </footer>
+    </main>
+  </div>
+</body>
+<script>
+  // Al hacer click en un usuario
+  document.querySelectorAll("#tabla_usuarios tbody tr").forEach(row => {
+    row.addEventListener("click", () => {
+      document.getElementById("usuario_id").value = row.dataset.id;
+    });
+  });
+
+  // Al hacer click en un salón
+  document.querySelectorAll("#tabla_salones tbody tr").forEach(row => {
+    row.addEventListener("click", () => {
+      document.getElementById("salon_id").value = row.dataset.id;
+    });
+  });
+</script>
+
+</html>
