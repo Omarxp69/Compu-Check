@@ -564,3 +564,199 @@ textarea:disabled {
 @keyframes slideFadeOut {
   to { opacity: 0; transform: translateY(-20px); }
 }
+
+
+/* ========================
+Responsive para móviles
+======================== */
+@media (max-width: 900px) {
+  .dashboard-container {
+    flex-direction: column;
+    padding: 12px; /* menos padding para móviles */
+    gap: 12px; /* menos espacio entre elementos */
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row; /* horizontal si hay muchos elementos */
+    overflow-x: auto;
+    padding: 8px; /* reducir padding */
+    border-radius: var(--radius);
+  }
+
+  .sidebar.collapsed {
+    display: none; /* ocultar si está colapsada */
+  }
+
+  .dashboard-main {
+    width: 100%;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* columnas más pequeñas */
+    gap: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .cards {
+    grid-template-columns: 1fr; /* una sola columna */
+  }
+
+  .form-busqueda,
+  .form-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px; /* menos espacio */
+    padding: 8px; /* menos padding */
+  }
+
+  .form-actualizar fieldset {
+    grid-template-columns: 1fr; /* todo vertical */
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .titulo_w {
+    font-size: 1.6rem;
+    padding: 10px 12px;
+  }
+
+  input, select, textarea {
+    font-size: 14px; /* reducir tamaño de texto */
+    padding: 8px 10px;
+  }
+
+  .card {
+    padding: 12px; /* reducir tamaño de card */
+  }
+
+/* ========================
+   Tabla responsiva compacta
+======================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 6px 8px; /* menos padding */
+  font-size: 13px;  /* tamaño de texto más pequeño */
+  text-align: left;
+}
+
+th {
+  background-color: #0f1724;
+  color: #fff;
+}
+
+td img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/* Scroll horizontal en móviles */
+@media (max-width: 700px) {
+  .dashboard-main table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  td img {
+    width: 25px;
+    height: 25px;
+  }
+}
+/* ========================
+   Scroll horizontal para pantallas pequeñas y móviles
+======================== */
+@media (max-width: 900px), (max-height: 700px) {
+  .dashboard-main table {
+    display: block;
+    overflow-x: auto;       /* scroll horizontal si es necesario */
+    white-space: nowrap;    /* evita que las columnas se quiebren */
+  }
+
+  th, td {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  td img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+}
+/* ========================
+   Tabla siempre responsiva con scroll horizontal
+======================== */
+.dashboard-main table {
+  display: block;             /* hace que la tabla sea un bloque */
+  width: 100%;                /* ocupa todo el contenedor */
+  overflow-x: auto;           /* permite scroll horizontal si es necesario */
+  -webkit-overflow-scrolling: touch; /* suaviza scroll en iOS */
+  white-space: nowrap;        /* evita que las columnas se rompan */
+  border-collapse: collapse;
+}
+
+.dashboard-main th, 
+.dashboard-main td {
+  padding: 4px 6px;           /* padding compacto */
+  font-size: 12px;            /* tamaño de texto más pequeño */
+  text-align: left;
+}
+
+.dashboard-main th {
+  background-color: #0f1724;
+  color: #fff;
+}
+
+.dashboard-main td img {
+  width: 25px; 
+  height: 25px; 
+  border-radius: 50%;
+}
+
+
+
+
+
+@media (max-width: 700px) {
+  .form-actualizar fieldset {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas en móvil */
+  }
+  
+  .form-actualizar button {
+    grid-column: span 2; /* el botón ocupa toda la fila en móvil */
+  }
+}
+
+
+@media (max-width: 700px) {
+  .form-busqueda fieldset {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    gap: 6px; /* menos espacio */
+  }
+
+  .form-busqueda input[type="text"],
+  .form-busqueda select {
+    font-size: 13px;      /* texto más pequeño */
+    padding: 6px 8px;     /* menos padding */
+  }
+
+  .form-busqueda button {
+    font-size: 13px;      /* texto más pequeño */
+    padding: 6px 8px;     /* botón más compacto */
+    grid-column: span 2;  /* botón ocupa las 2 columnas */
+  }
+}

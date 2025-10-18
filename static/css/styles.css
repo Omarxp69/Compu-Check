@@ -1,34 +1,30 @@
 /* ========================
    Estilos generales
 ======================== */
-/*background: linear-gradient(135deg, #000000, #000000);*/
 body {
     background: radial-gradient(circle, #ffffff, #0f1724);
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Para que el formulario no quede pegado al centro vertical */
-    padding: 40px 20px; /* agrega espacio superior e inferior */
+    align-items: flex-start;
+    padding: 40px 20px;
     min-height: 100vh;
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* ========================
-   Contenedor del formulario
+   Formulario
 ======================== */
 form {
     background-color: #0f1724;
-    padding: 50px 40px; /* más espacio para los campos adicionales */
+    padding: 50px 40px;
     border-radius: 12px;
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
     width: 100%;
-    max-width: 550px; /* más ancho para formularios grandes */
+    max-width: 550px;
     box-sizing: border-box;
 }
 
-/* ========================
-   Título
-======================== */
 h2 {
     text-align: center;
     color: #ffffff;
@@ -37,7 +33,7 @@ h2 {
 }
 
 /* ========================
-   Etiquetas
+   Labels e Inputs
 ======================== */
 label {
     display: block;
@@ -46,9 +42,6 @@ label {
     color: #fcfcfc;
 }
 
-/* ========================
-   Inputs
-======================== */
 input[type="email"],
 input[type="password"],
 input[type="text"] {
@@ -90,7 +83,6 @@ button:not(.toggle-password):hover {
     background-color: #727272;
 }
 
-/* Botón del ojo */
 .toggle-password {
     flex: 0 0 auto;
     margin-left: 10px;
@@ -104,7 +96,7 @@ button:not(.toggle-password):hover {
 }
 
 /* ========================
-   Información de la app
+   Contenedores y mensajes
 ======================== */
 .app-info {
     text-align: center;
@@ -113,9 +105,6 @@ button:not(.toggle-password):hover {
     font-size: 18px;
 }
 
-/* ========================
-   Mensajes flash
-======================== */
 .flash-container {
     margin-bottom: 20px;
 }
@@ -128,7 +117,6 @@ button:not(.toggle-password):hover {
     color: #000000;
     border: 1px solid #ffffff;
     font-size: 16px;
-    
 }
 
 .flash-messages li {
@@ -161,8 +149,14 @@ button:not(.toggle-password):hover {
    Responsividad
 ======================== */
 @media (max-width: 600px) {
+    body {
+        padding: 20px 10px;
+    }
+
     form {
         padding: 30px 20px;
+        max-width: 100%;
+        margin: 20px 0; /* Nuevo: agrega margen arriba y abajo */
     }
 
     h2 {
@@ -173,9 +167,15 @@ button:not(.toggle-password):hover {
     input[type="password"],
     input[type="text"] {
         padding: 12px 10px;
+        font-size: 14px;
     }
 
     button:not(.toggle-password) {
         padding: 12px;
+        font-size: 14px;
+    }
+
+    .app-info {
+        font-size: 16px;
     }
 }

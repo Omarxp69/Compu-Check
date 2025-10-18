@@ -140,6 +140,64 @@
       color: var(--text);
       margin-bottom: 4px;
     }
+    /* ====== Responsivo móvil ====== */
+    @media (max-width: 700px) {
+      /* Formularios */
+      .filtros-combinados form,
+      .form-busqueda,
+      .form-actualizar {
+        flex-direction: column; /* apilar inputs verticalmente */
+        gap: 8px;               /* espacio reducido entre elementos */
+        padding: 10px;          /* menos padding */
+      }
+
+      .filtros-combinados form label,
+      .form-busqueda label,
+      .form-actualizar label {
+        font-size: 12px;        /* etiquetas más pequeñas */
+        margin-bottom: 2px;
+      }
+
+      .filtros-combinados form input,
+      .filtros-combinados form select,
+      .form-busqueda input,
+      .form-busqueda select,
+      .form-actualizar input,
+      .form-actualizar select {
+        font-size: 12px;        /* inputs más pequeños */
+        padding: 4px 6px;       /* menos padding */
+        max-width: 100%;        /* que no se desborde */
+      }
+
+      .filtros-combinados form button,
+      .form-busqueda button,
+      .form-actualizar button {
+        font-size: 12px;        /* botones más pequeños */
+        padding: 5px 8px;
+        width: 100%;            /* ocupar todo el ancho disponible */
+      }
+
+      /* Tablas lado a lado: permitir scroll horizontal */
+      .tablas-lado-a-lado {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 10px;
+      }
+
+      .tabla-wrapper {
+        min-width: 250px;
+      }
+
+      .tabla-wrapper th,
+      .tabla-wrapper td {
+        font-size: 12px;
+        padding: 4px 6px;
+      }
+    }
+
+        
+
+        
     
         
     

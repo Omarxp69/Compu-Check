@@ -6,155 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Compuchek - Gestionar_Usuarios</title>
 
-  <!--
-  <style>
-    form[method="get"] {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 16px;
-    padding: 12px 16px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05)), var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: 0 6px 20px rgba(16,24,40,0.05);
-      
-
-    }
-
-    form[method="get"] input[type="text"] {
-      flex: 1 1 200px;
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(16,24,40,0.15);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 15px;
-      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
-    }
-
-    form[method="get"] input[type="text"]:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-    }
-
-    form[method="get"] select {
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(16,24,40,0.15);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 15px;
-      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
-    }
-
-    form[method="get"] select:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
-    }
-
-    form[method="get"] button {
-      padding: 10px 18px;
-      border-radius: var(--radius);
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--transition), transform var(--transition);
-    }
-
-    form[method="get"] button:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
-    /* Responsive para mobile */
-    @media (max-width: 700px) {
-      form[method="get"] {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-    /* ========================
-      Formulario actualizar usuario - expandido
-    ======================== */
-    form[method="post"] {
-      display: grid;
-      grid-template-rows: repeat(2, auto); /* 2 filas */
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* columnas automáticas */
-      gap: 10px 12px;
-      padding: 0; /* sin padding extra */
-      background: transparent; /* sin fondo */
-      box-shadow: none; /* sin sombra */
-      width: 100%; /* ocupa todo el ancho */
-      margin-bottom: 20px;
-    }
-
-    /* Labels sobre los inputs */
-    form[method="post"] label {
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    /* Inputs y selects simples */
-    form[method="post"] input,
-    form[method="post"] select {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: var(--radius);
-      border: 1px solid rgba(16,24,40,0.15);
-      background: rgba(255,255,255,0.02); /* muy ligero para no parecer cuadro */
-      color: var(--text);
-      font-size: 14px;
-      transition: border var(--transition), background var(--transition), box-shadow var(--transition);
-    }
-
-    form[method="post"] input:focus,
-    form[method="post"] select:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(255,255,255,0.05);
-      box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
-    }
-
-    /* Botón ocupa toda la segunda fila */
-    form[method="post"] button {
-      grid-column: 1 / -1;
-      padding: 8px 16px;
-      border-radius: var(--radius);
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--transition), transform var(--transition);
-    }
-
-    form[method="post"] button:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
-    }
-
-    /* Responsive para pantallas pequeñas */
-    @media (max-width: 600px) {
-      form[method="post"] {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-      }
-      form[method="post"] button {
-        grid-column: 1 / -1;
-      }
-    }
-
-    
-    
-  </style> -->
-  
 </head>
 <body>
   <div class="dashboard-container">
@@ -306,28 +157,28 @@
           <tbody>
             {% for u in usuarios %}
             <tr class="usuario-row" data-user-id="{{ u[0] }}">
-                <td>{{ u[0] }}</td>
-                <td>
+                <td data-label="ID">{{ u[0] }}</td>
+                <td data-label="Foto">
                   {% if u[6] %}
                       <img src="{{ url_for('static', filename=u[6]) }}" width="40" height="40" style="border-radius:50%;">
                   {% else %}
                       <span style="display:inline-block; width:40px; height:40px; text-align:center; line-height:40px; font-size:20px;">👤</span>
                   {% endif %}
                 </td>
-                <td>{{ u[1] }}</td>
-                <td>{{ u[2] }}</td>
-                <td>{{ u[3] }}</td>
-                <td>{{ u[4] }}</td>
-                <td>{{ u[5] }}</td>
-                <td>
+                <td data-label="Nombre">{{ u[1] }}</td>
+                <td data-label="Apellido Paterno">{{ u[2] }}</td>
+                <td data-label="Apellido Materno">{{ u[3] }}</td>
+                <td data-label="Email">{{ u[4] }}</td>
+                <td data-label="Rol">{{ u[5] }}</td>
+                <td data-label="Estado">
                     {% if u[7] == 1 %}
                         Activo
                     {% else %}
                         Inactivo
                     {% endif %}
                 </td>
-                <td>{{ u[8].strftime('%d/%m/%Y %H:%M') }}</td>
-                <td>{{ u[9].strftime('%d/%m/%Y %H:%M') }}</td>
+                <td data-label="Fecha de Creación">{{ u[8].strftime('%d/%m/%Y %H:%M') }}</td>
+                <td data-label="Fecha de Actualización">{{ u[9].strftime('%d/%m/%Y %H:%M') }}</td>
             </tr>
             {% endfor %}
           </tbody>
