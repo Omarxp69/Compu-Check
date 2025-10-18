@@ -9,6 +9,21 @@ from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from sklearn.ensemble import RandomForestClassifier
 
 
+base_model = None
+
+def get_model():
+    global base_model
+    if base_model is None:
+        base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160,160,3))
+        base_model.load_weights('model_weights/mobilenet_v2.weights.h5')
+    return base_model
+
+
+
+
+
+
+
 # ===== CONFIGURACIÓN =====
 DATA_ROOT = "data/train"
 MODEL_DIR = "models"
@@ -39,7 +54,8 @@ def load_and_preprocess(img_path):
 def extract_embedding(img_path):
     """Extrae el embedding (vector de características) de una imagen."""
     arr = load_and_preprocess(img_path)
-    return base_model.predict(arr, verbose=0).reshape(-1)
+    model = get_model()
+    return model.predict(arr, verbose=0).reshape(-1)
 
 
 def extract_dataset_embeddings(device):
