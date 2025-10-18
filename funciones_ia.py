@@ -5,8 +5,15 @@ from PIL import Image
 import numpy as np
 import joblib
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+import tensorflow
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+tensorflow.config.threading.set_intra_op_parallelism_threads(1)
+tensorflow.config.threading.set_inter_op_parallelism_threads(1)
+
+
 from sklearn.ensemble import RandomForestClassifier
 
 
@@ -15,7 +22,7 @@ base_model = None
 def get_model():
     global base_model
     if base_model is None:
-        base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160,160,3))
+        base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160, 160, 3))
         base_model.load_weights('model_weights/mobilenet_v2.weights.h5')
     return base_model
 
