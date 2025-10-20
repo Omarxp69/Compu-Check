@@ -238,6 +238,19 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 @logout_required
 def register():
+
+    print("📧 Configuración Flask-Mail:")
+    print("MAIL_SERVER:", app.config['MAIL_SERVER'])
+    print("MAIL_PORT:", app.config['MAIL_PORT'])
+    print("MAIL_USE_TLS:", app.config['MAIL_USE_TLS'])
+    print("MAIL_USERNAME:", app.config['MAIL_USERNAME'])
+    print("MAIL_PASSWORD:", app.config['MAIL_PASSWORD'][:4] + "********")
+
+
+
+
+
+
     if request.method == "POST":
         # Leer datos del formulario
         apellido_paterno = request.form.get('apellido_paterno')
