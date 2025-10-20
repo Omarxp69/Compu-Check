@@ -9,13 +9,12 @@ from datetime import timedelta,datetime
 
 from tensorflow.keras.applications import MobileNetV2
 
-from flask_mail import Mail, Message
+#from flask_mail import Mail, Message
 import secrets
+import smtplib
 
-
-
-
-
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail as SGMail
 
 # -----Archivos de python--------
 from funciones_ia import clasificar_dispositivos,prueba
@@ -90,14 +89,26 @@ def allowed_file(filename):
 
 #-----------------Correo-----------------------------
 
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USE_SSL']  = False
+# app.config['EMAIL_USER'] = os.getenv('EMAIL_USER')
+# app.config['EMAIL_PASS'] = os.getenv('EMAIL_PASS')
+# mail = Mail(app)
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')
-app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASS')
-
-mail = Mail(app)
+def enviar_correo(destinatario, asunto, contenido_html):
+    message = SGMail(
+        from_email=os.environ.get('SENDGRID_SENDER'),  # tu email verificado en SendGrid
+        to_emails=destinatario,
+        subject=asunto,
+        html_content=contenido_html
+    )
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg.send(message)
+    except Exception as e:
+        print("Error enviando correo:", e)
 
 
 
@@ -271,16 +282,10 @@ def register():
             flash("✅ Registro exitoso. Ahora revisa tu correo para verificar la cuenta.")
 
         verify_url = url_for('verify_email', token=token, _external=True)
+        html_content = render_template('email_verify.html', nombre=nombre, verify_url=verify_url)
+        enviar_correo(email, "Confirma tu cuenta", html_content)
 
-        msg = Message(
-            "Confirma tu cuenta",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
 
-        # Renderizamos el template con las variables que queremos pasar
-        msg.html = render_template('email_verify.html', nombre=nombre, verify_url=verify_url)
-        mail.send(msg)
         return redirect(url_for('login'))
     return render_template("register.html")
 
@@ -331,13 +336,8 @@ def forgot_password():
             
             # Enviar correo con link
             reset_url = url_for("reset_password", token=token, _external=True)
-            msg = Message(
-                "Restablece tu contraseña",
-                sender=app.config['MAIL_USERNAME'],
-                recipients=[email]
-            )
-            msg.html = render_template("email_reset_password.html", nombre=user[1], reset_url=reset_url)  # <- aquí índice 1
-            mail.send(msg)
+            html_content = render_template("email_reset_password.html", nombre=user[1], reset_url=reset_url)
+            enviar_correo(email, "Confirma tu cuenta", html_content)
 
         # Mensaje genérico para no revelar si existe o no el email
         flash("Se ha enviado un enlace para restablecer tu contraseña.")
