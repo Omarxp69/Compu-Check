@@ -231,8 +231,15 @@
           <li><a href="/reports">📊 Reportes</a></li>
           <li><a href="/Gestionar_reportes">🛠️ Gestionar Reportes</a></li>
         {% elif user_role == 'moderador' %}
+
           <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
+          <li><a href="/Gestionar_Salas">🛠️ Gestionar Salas</a></li>
+          <li class="active"><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar Permisos</a></li>
           <li><a href="/reports">📊 Reportes</a></li>
+          <li><a href="/Gestionar_reportes">🛠️ Gestionar Reportes</a></li>
+
+
         {% elif user_role == 'user' %}
           <li><a href="/subir_reporte">📝 Subir reporte</a></li>
         {% endif %}
@@ -314,13 +321,6 @@
           </form>
       </div>
 
-
-
-      
-
-
-      
-      
       <div class="form-section">
         <h2>Usuarios y Salones</h2>
         <div class="tablas-lado-a-lado">
