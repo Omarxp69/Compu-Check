@@ -573,7 +573,7 @@ def salas():
 
 @app.route('/Gestionar_Salas', methods=['GET', 'POST'])
 @login_required
-@admin_required
+@role_required('admin', 'moderador')
 def gestionar_salas():
     user = get_current_user()
     user_name = user['name'].capitalize()
