@@ -9,6 +9,12 @@ from datetime import timedelta,datetime
 
 from tensorflow.keras.applications import MobileNetV2
 
+from flask_mail import Mail, Message
+import secrets
+
+
+
+
 
 
 # -----Archivos de python--------
@@ -50,13 +56,10 @@ from conexion_db import (
     obtener_ids_perifericos,
     actualizar_estado_foto_pantalla,
     actualizar_estado_foto_teclado,   
-    actualizar_estado_foto_mouse
+    actualizar_estado_foto_mouse,
+    obtener_todos_reportes,
+    eliminar_reporte
 )
-
-
-
-
-
 load_dotenv()
 app=Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
@@ -83,6 +86,23 @@ app.config['MOUSE_FOLDER'] = MOUSE_FOLDER
 app.config['UPLOAD_FOLDER_TEMP'] = TEMPORAL_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+#-----------------Correo-----------------------------
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASS')
+
+mail = Mail(app)
+
+
+
+
+
 
 #---------- Roles de usuario y sesiones -------------------
 ROLE_DASHBOARDS = {
@@ -170,11 +190,6 @@ def check_session_timeout():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-@app.errorhandler(405)
-def page_not_found(e):
-    return render_template('405.html'), 405
-
-
 #------------- lOGUEO DE USUARIO E INICIO DE SESION ---------------------
 @app.route("/")
 @logout_required
@@ -191,9 +206,14 @@ def login():
         if not email or not password:
             flash("❌ Debes llenar todos los campos")
             return redirect(url_for('login'))
-        
+
         user=obtener_usuario_por_email(email)
         if user and bcrypt.checkpw(password.encode('utf-8'), user[5].encode()):
+            if not user[11]:  # Ajusta el índice si cambia (email_verified)
+                flash("⚠️ Debes verificar tu correo antes de iniciar sesión.")
+                return redirect(url_for('login'))
+
+
             session['nombre'] = user[1]  # username
             session['email']=user[4]     #email
             session['role'] = user[9]    # role
@@ -232,10 +252,146 @@ def register():
             flash("❌ Las contraseñas no coinciden")
             return redirect(url_for('register'))
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
-        insertar_usuario(nombre,apellido_paterno,apellido_materno,email,hashed_password)
-        flash("✅ Registro exitoso. Ahora puedes iniciar sesión.")
+        token=insertar_usuario(nombre,apellido_paterno,apellido_materno,email,hashed_password)
+
+        if token is None:
+            # Usuario ya existe, generar un nuevo token de verificación
+            usuario = obtener_usuario_por_email(email)
+            token = secrets.token_urlsafe(32)
+
+            # Actualizar token en la base de datos
+            conn = get_connection()
+            cursor = conn.cursor()
+            cursor.execute("UPDATE users SET verification_token=%s, email_verified=FALSE WHERE email=%s", (token, email))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            flash("🔄 Ya estabas registrado. Se ha reenviado el correo de verificación.")
+        else:
+            flash("✅ Registro exitoso. Ahora revisa tu correo para verificar la cuenta.")
+
+        verify_url = url_for('verify_email', token=token, _external=True)
+
+        msg = Message(
+            "Confirma tu cuenta",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[email]
+        )
+
+        # Renderizamos el template con las variables que queremos pasar
+        msg.html = render_template('email_verify.html', nombre=nombre, verify_url=verify_url)
+        mail.send(msg)
         return redirect(url_for('login'))
     return render_template("register.html")
+
+
+@app.route('/verify_email/<token>')
+def verify_email(token):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM users WHERE verification_token = %s", (token,))
+    user = cursor.fetchone()
+
+    if not user:
+        flash("❌ Enlace inválido o expirado.")
+        return redirect(url_for('login'))
+
+    cursor.execute("""
+        UPDATE users
+        SET email_verified = TRUE, verification_token = NULL
+        WHERE id = %s
+    """, (user[0],))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("✅ Correo verificado. Ahora puedes iniciar sesión.")
+    return redirect(url_for('login'))
+
+@app.route("/forgot_password", methods=["GET", "POST"])
+@logout_required
+def forgot_password():
+    if request.method == "POST":
+        email = request.form.get("email")
+        user = obtener_usuario_por_email(email)
+        if user:
+            # Generar token temporal
+            token = secrets.token_urlsafe(32)
+            
+            # Guardar token en DB y marcar expiración (opcional, ej. 1 hora)
+            conn = get_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET reset_token=%s, reset_token_expiry=DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email=%s",
+                (token, email)
+            )
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            # Enviar correo con link
+            reset_url = url_for("reset_password", token=token, _external=True)
+            msg = Message(
+                "Restablece tu contraseña",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[email]
+            )
+            msg.html = render_template("email_reset_password.html", nombre=user[1], reset_url=reset_url)  # <- aquí índice 1
+            mail.send(msg)
+
+        # Mensaje genérico para no revelar si existe o no el email
+        flash("Se ha enviado un enlace para restablecer tu contraseña.")
+        return redirect(url_for("login"))
+    return render_template("forgot_password.html")
+
+
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+@logout_required
+def reset_password(token):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE reset_token=%s AND reset_token_expiry > NOW()", (token,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if not user:
+        flash("El enlace de restablecimiento no es válido o ha expirado.")
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+
+        if password != confirm_password:
+            flash("❌ Las contraseñas no coinciden")
+            return redirect(url_for("reset_password", token=token))
+        if not contrasena_valida(password):
+            flash("❌ La contraseña debe tener mínimo 8 caracteres, una letra mayúscula, un número")
+            return redirect(url_for("reset_password", token=token))
+
+        hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode()
+
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE users SET password=%s, reset_token=NULL, reset_token_expiry=NULL WHERE id=%s",
+            (hashed_password, user['id'])
+        )
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash("✅ Contraseña restablecida correctamente. Ahora puedes iniciar sesión.")
+        return redirect(url_for("login"))
+
+    return render_template("reset_password.html", token=token)
+
+
+
+
+
 
 
 @app.route('/logout')
@@ -633,7 +789,7 @@ def computadoras():
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
-    salones = obtener_id_y_nombre_salones()
+    salones = obtener_id_y_nombre_salones(False)
 
 
 
@@ -1172,10 +1328,16 @@ def Reportes():
     user_name=user['name'].capitalize()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
-    salones = obtener_id_y_nombre_salones()
+    user_id = int(user['id'])
+    
+    if user_role == 'admin' or user_role == 'moderador':
+        salones = obtener_id_y_nombre_salones(False)
+    else:
+        salones = obtener_id_y_nombre_salones(True,user_id)
 
     return render_template('Reportes.html',user_name=user_name,user_role=user_role,user_profile_pic=user_profile_pic,salones=salones)
 @app.route('/obtener_computadoras/<int:id_salon>')
+
 @login_required
 def obtener_computadoras(id_salon):
     computadoras = obtener_computadora_por_salon(id_salon)
@@ -1221,10 +1383,6 @@ def guardar_reporte():
 
     flash("✅ Reporte creado correctamente")
     return redirect(url_for('Reportes'))
-
-
-def map_estado(label):
-    return "operativa" if label == "bueno" else "dañada"
 
 
 def Realizar_reporte(foto_pantalla,id_pantalla,
@@ -1278,7 +1436,9 @@ def Realizar_reporte(foto_pantalla,id_pantalla,
         score_teclado, estado_teclado,
         score_mouse, estado_mouse)
 
-
+#-----------------------EXTRAS-----------------------
+def map_estado(label):
+    return "operativa" if label == "bueno" else "dañada"
 def procesar_foto(file, folder, prefijo, id_item):
     if file and allowed_file(file.filename):
         os.makedirs(folder, exist_ok=True)
@@ -1302,10 +1462,65 @@ def procesar_foto(file, folder, prefijo, id_item):
     return None, None
 
 
+#-----------------------Gestionar reportes-----------------------
+
+
+@app.route('/Gestionar_reportes', methods=['GET', 'POST'])
+@login_required
+@role_required('admin', 'moderador')
+def gestionar_reportes():
+    user = get_current_user()
+    user_name = user['name'].capitalize()
+    user_role = user['role']
+
+    user_profile_pic = user['foto_perfil']
+    filtro_columna = request.args.get('filtro_columna', 'id_reporte')
+    orden = request.args.get('orden', 'ASC')
+    search = request.args.get('search', '').strip()  # nuevo parámetro de búsqueda
+    
+    
+    
+    reportes=obtener_todos_reportes(filtro_columna,orden,search)
+    return render_template('Gestionar_reportes.html',
+        user_name=user_name,
+        user_role=user_role,
+        user_profile_pic=user_profile_pic,
+        reportes=reportes,
+        filtro_columna=filtro_columna,
+        orden=orden,
+        search=search
+    )
+
+
+@app.route('/eliminar_reportes', methods=['GET', 'POST'])
+@login_required
+@role_required('admin', 'moderador')
+def eliminar_reportes():
+    try:
+        reporte_id = request.form.get('id_reporte')
+    except (TypeError, ValueError):
+        flash("❌ ID de reporte inválido.")
+        return redirect(url_for('gestionar_reportes'))
+    
+    
+    admin_password = request.form.get('admin_password').strip()
+    
+    if not admin_password:
+        flash("❌ Debes ingresar tu contraseña para eliminar la sala.")
+        return redirect(url_for('gestionar_reportes'))
+
+    # Verificar contraseña admin
+    admin = get_current_user()
+    if not bcrypt.checkpw(admin_password.encode('utf-8'), obtener_usuario_por_email(admin['email'])[5].encode()):
+        flash("❌ Contraseña incorrecta.")
+        return redirect(url_for('gestionar_reportes'))
+    eliminar_reporte(reporte_id)
+    return redirect(url_for('gestionar_reportes'))
 
 
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(debug=True,host="0.0.0.0")
+    #app.run(host="0.0.0.0", port=port)

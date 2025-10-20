@@ -2,6 +2,8 @@ import mysql.connector
 import os
 from dotenv import load_dotenv
 from flask import flash
+
+import secrets
 # Cargar variables de entorno
 load_dotenv()
 def get_connection():
@@ -14,24 +16,25 @@ def get_connection():
     )
     return conexion
 
-#def get_connection():
-    #conexion = mysql.connector.connect(
-        #host='localhost',
-        #user='root',
-        #password='Guada_xp69@3',
-        #database='pythonflask'
-    #)
-    #return conexion
+
 
 def insertar_usuario(nombre, apellido_paterno, apellido_materno, email, password):
     conn = get_connection()
     cursor = conn.cursor()
+
+
+    cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
+    if cursor.fetchone():
+        return None
+
+    token = secrets.token_urlsafe(32)
+
     cursor.execute(
         """
-        INSERT INTO users (nombre, apellido_paterno, apellido_materno, email, password)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO users (nombre, apellido_paterno, apellido_materno, email, password, verification_token, email_verified)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """,
-        (nombre, apellido_paterno, apellido_materno, email, password)
+        (nombre, apellido_paterno, apellido_materno, email, password, token, False)
     )
     nuevo_id = cursor.lastrowid
 
@@ -45,6 +48,7 @@ def insertar_usuario(nombre, apellido_paterno, apellido_materno, email, password
     conn.commit()
     cursor.close()
     conn.close()
+    return token
 
 def obtener_todos_usuarios(filtro_columna='id', orden='ASC', search=''):
     columnas_permitidas = ['id', 'nombre', 'apellido_paterno', 'apellido_materno', 'email', 'rol','estado','created_at','updated_at']
@@ -60,7 +64,7 @@ def obtener_todos_usuarios(filtro_columna='id', orden='ASC', search=''):
     query = f"""
         SELECT id, nombre, apellido_paterno, apellido_materno, email, rol, foto_perfil, estado, created_at, updated_at
         FROM users
-        WHERE 1=1
+        WHERE email_verified = TRUE
     """
 
     params = []
@@ -80,10 +84,12 @@ def obtener_todos_usuarios(filtro_columna='id', orden='ASC', search=''):
     conn.close()
     return usuarios
 
+
+
 def obtener_usuario_por_email(email):
     db = get_connection()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM users WHERE email = %s AND estado = 1", (email,))
+    cursor.execute("SELECT * FROM users WHERE email = %s AND estado = 1 AND email_verified = TRUE", (email,))
     user = cursor.fetchone()
     cursor.close()
     db.close()
@@ -91,11 +97,12 @@ def obtener_usuario_por_email(email):
 def obtener_usuario_por_id(user_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)  # para obtener un diccionario
-    cursor.execute("SELECT * FROM users WHERE id = %s AND estado = 1", (user_id,))
+    cursor.execute("SELECT * FROM users WHERE id = %s AND estado = 1 AND email_verified = TRUE", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
     return user
+
 def obtener_todos_Salas(filtro_columna='id_salon', orden='ASC', search=''):
     columnas_permitidas = ['id_salon', 'nombre_salon', 'ubicacion', 'cantidad_equipos', 'estado', 'descripcion', 'fecha_creacion', 'updated_at']
     if filtro_columna not in columnas_permitidas:
@@ -255,14 +262,29 @@ def insertar_pantalla(marca, estado="operativa", foto=None):
     conn.close()
     return pantalla_id  # retornamos el id
 # ===================== OBTENER ID Y NOMBRE DE SALONES =====================
-def obtener_id_y_nombre_salones():
+def obtener_id_y_nombre_salones(filtrar_por_permiso, user_id=None):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id_salon, nombre_salon FROM Salones;")
+
+    if filtrar_por_permiso and user_id is not None:
+        # Retorna solo los salones a los que el usuario tiene permiso
+        cursor.execute("""
+            SELECT s.id_salon, s.nombre_salon
+            FROM Salones s
+            INNER JOIN Permisos p ON s.id_salon = p.id_salon
+            WHERE p.id_usuario = %s;
+        """, (user_id,))
+    else:
+        # Retorna todos los salones
+        cursor.execute("SELECT id_salon, nombre_salon FROM Salones;")
+
     resultados = cursor.fetchall()
     cursor.close()
     conn.close()
     return resultados
+
+
+
 def obtener_computadora_por_salon(id_salon):
     conn = get_connection()
     cursor = conn.cursor()
@@ -278,11 +300,6 @@ def obtener_computadora_por_salon(id_salon):
     cursor.close()
     conn.close()
     return computadoras
-
-    
-
-
-
 def obtener_computadoras_con_sala_id(sala_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -450,7 +467,6 @@ def obtener_usuarios_basico(filtro_columna='id', orden='ASC', search=''):
     cursor.close()
     conn.close()
     return usuarios
-
 def obtener_salon_basico(filtro_columna='id_salon', orden='ASC', search=''):
     
     columnas_permitidas = ['id_salon', 'nombre_salon']
@@ -485,11 +501,6 @@ def obtener_salon_basico(filtro_columna='id_salon', orden='ASC', search=''):
     cursor.close()
     conn.close()
     return salones
-
-
-
-
-
 def insertar_acceso_salon(id_usuario, id_salon, asignado_por):
     try:
         conn = get_connection()
@@ -508,7 +519,6 @@ def insertar_acceso_salon(id_usuario, id_salon, asignado_por):
             cursor.close()
         if conn:
             conn.close()
-
 def permiso_existente(id_usuario, id_salon):
     try:
         conn = get_connection()
@@ -527,8 +537,6 @@ def permiso_existente(id_usuario, id_salon):
             cursor.close()
         if conn:
             conn.close()
-
-
 def obtener_permisos(filtro_columna='id_permiso', orden='ASC', search=''):
     # Columnas permitidas para ordenamiento
     columnas_permitidas = [
@@ -578,7 +586,6 @@ def obtener_permisos(filtro_columna='id_permiso', orden='ASC', search=''):
     cursor.close()
     conn.close()
     return permisos
-
 def eliminar_permiso(permiso_id):
     conn = None
     cursor = None
@@ -599,9 +606,6 @@ def eliminar_permiso(permiso_id):
     finally:
         cursor.close()
         conn.close()
-
-
-
 def actualizar_pantalla_db(id_pantalla, marca_pantalla, estado_pantalla, foto_filename=None):
     conexion = get_connection()
     cursor = conexion.cursor()
@@ -650,7 +654,6 @@ def actualizar_teclado_db(id_teclado,marca_teclado,tipo_teclado,estado_teclado,f
     conexion.commit()
     cursor.close()
     conexion.close()
-    
 def actualizar_mouse_db(id_mouse,marca_mouse,tipo_mouse,estado_mouse,foto_filename):
     conexion = get_connection()
     cursor = conexion.cursor()
@@ -675,7 +678,6 @@ def actualizar_mouse_db(id_mouse,marca_mouse,tipo_mouse,estado_mouse,foto_filena
     conexion.commit()
     cursor.close()
     conexion.close()
-
 def insertar_reporte(id_usuario, id_salon, id_computadora, 
                     id_pantalla=None, id_teclado=None, id_mouse=None,
                     estado_pantalla='operativa', score_pantalla=None,
@@ -710,7 +712,6 @@ def insertar_reporte(id_usuario, id_salon, id_computadora,
     cursor.close()
     conexion.close()
     return last_id  # Devuelve el id del reporte insertado
-
 def obtener_ids_perifericos(id_computadora):
     print('------Entro a obtener_ids_perifericos ------')
     conexion = get_connection()
@@ -735,9 +736,6 @@ def obtener_ids_perifericos(id_computadora):
         }
     else:
         return None
-
-
-
 def actualizar_estado_foto_pantalla(id_pantalla, estado_pantalla, foto_filename):
     print('---------- actualizar_estado_foto_pantalla ------------------')
     print(f"ID_Pantalla: {id_pantalla}")
@@ -802,6 +800,103 @@ def actualizar_estado_foto_mouse(id_mouse, estado_mouse, foto_filename):
     conexion.commit()
     cursor.close()
     conexion.close()
+def obtener_todos_reportes(filtro_columna='id_reporte', orden='ASC', search=''):
+    # Columnas permitidas para ordenar (por seguridad)
+    columnas_permitidas = [
+        'id_reporte', 'nombre_usuario', 'nombre_salon', 'matricula',
+        'estado_mouse', 'estado_teclado', 'estado_pantalla',
+        'estado_reporte', 'fecha_reporte'
+    ]
+    if filtro_columna not in columnas_permitidas:
+        filtro_columna = 'id_reporte'
+
+    orden = orden.upper()
+    if orden not in ['ASC', 'DESC']:
+        orden = 'ASC'
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)  # ← Esto devuelve diccionarios, no tuplas
+
+    query = f"""
+        SELECT 
+            r.id_reporte,
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS nombre_usuario,
+            s.nombre_salon,
+            c.matricula AS matricula_computadora,
+            r.estado_mouse,
+            r.score_mouse,
+            r.estado_teclado,
+            r.score_teclado,
+            r.estado_pantalla,
+            r.score_pantalla,
+            r.comentarios,
+            r.estado_reporte,
+            r.fecha_reporte
+        FROM Reportes r
+        INNER JOIN users u ON r.id_usuario = u.id
+        INNER JOIN Salones s ON r.id_salon = s.id_salon
+        INNER JOIN Computadoras c ON r.id_computadora = c.id_computadora
+        WHERE 1=1
+    """
+
+    params = []
+    if search:
+        if search.isdigit():
+            query += " AND (r.id_reporte = %s OR c.matricula LIKE %s)"
+            params.extend([int(search), f"%{search}%"])
+        else:
+            query += """
+                AND (
+                    u.nombre LIKE %s OR 
+                    u.apellido_paterno LIKE %s OR 
+                    s.nombre_salon LIKE %s OR 
+                    c.matricula LIKE %s OR
+                    r.comentarios LIKE %s
+                )
+            """
+            params.extend([f"%{search}%"] * 5)
+
+    query += f" ORDER BY {filtro_columna} {orden}"
+
+    cursor.execute(query, params)
+    reportes = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return reportes
+def eliminar_reporte(id_reporte):
+    conexion = None
+    cursor = None
+    try:
+        conexion = get_connection()
+        cursor = conexion.cursor(dictionary=True)
+
+        # Ejecutar eliminación
+        cursor.execute("DELETE FROM Reportes WHERE id_reporte = %s", (id_reporte,))
+        conexion.commit()
+
+        if cursor.rowcount > 0:
+            flash("✅ Reporte eliminado correctamente.")
+        else:
+            flash("⚠️ No se encontró un reporte con ese ID.")
+
+    except Exception as e:
+        print("Error al eliminar reporte:", e)
+        flash("❌ Ocurrió un error al intentar eliminar el reporte.")
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conexion:
+            conexion.close()
+
+
+
+
+
+
+
+
+
 
 
 
@@ -840,6 +935,8 @@ __all__ = [
     'obtener_ids_perifericos',
     'actualizar_estado_foto_pantalla',
     'actualizar_estado_foto_teclado',
-    'actualizar_estado_foto_mouse'
+    'actualizar_estado_foto_mouse',
+    'obtener_todos_reportes',
+    'eliminar_reporte'
 ]
 

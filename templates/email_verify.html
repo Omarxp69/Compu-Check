@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verifica tu correo</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f5f5; color: #333; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2563eb; }
+        .button { display: inline-block; padding: 10px 20px; margin-top: 20px; font-size: 16px; color: #ffffff; background-color: #2563eb; text-decoration: none; border-radius: 5px; }
+        .footer { margin-top: 30px; font-size: 12px; color: #888; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hola {{ nombre }} 👋</h1>
+        <p>Gracias por registrarte en nuestra plataforma.</p>
+        <p>Para activar tu cuenta, haz clic en el botón de abajo:</p>
+        <a href="{{ verify_url }}" class="button">Verificar mi cuenta</a>
+        <p class="footer">Si no creaste esta cuenta, puedes ignorar este correo.</p>
+    </div>
+</body>
+</html>

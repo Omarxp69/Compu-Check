@@ -39,12 +39,13 @@
           <li><a href="/Gestionar_Computadoras">🛠️ Gestionar Computadoras</a></li>
           <li><a href="/Gestionar_perifericos">🛠️ Gestionar Perifericos</a></li>
           <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
-          <li><a href="/Gestionar_Permisos">🛠️ Gestionar_Permisos</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar Permisos</a></li>
           <li><a href="/reports">📊 Reportes</a></li>
+          <li><a href="/Gestionar_reportes">🛠️ Gestionar Reportes</a></li>
         {% elif user_role == 'moderador' %}
           <li><a href="/reports">📊 Reportes</a></li>
         {% elif user_role == 'user' %}
-          <li><a href="/subir_reporte">📝 Subir reporte</a></li>
+          <li><a href="/reports">📊 Reportes</a></li>
         {% endif %}
         <li><a href="/profile">✏️ Editar Perfil</a></li>
         <li><a href="/logout">🚪 Cerrar sesión</a></li>
@@ -54,8 +55,7 @@
     <!-- Main -->
     <main class="dashboard-main">
       <header>
-        <h1>Bienvenido, {{ user_name }}</h1>
-        <p>{{ user_message }}</p>
+        <h1 class="titulo_w">Bienvenido, {{ user_name }}</h1>
       </header>
       <section class="dashboard-info">
       <h2>Descripción de cada sección:</h2>
