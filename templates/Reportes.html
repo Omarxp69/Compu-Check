@@ -119,9 +119,9 @@
             <legend>Subir Reporte</legend>
 
             <!-- Selección del salón -->
-            <label for="id_salon">Salón:</label>
+            <label for="id_salon">Sala:</label>
             <select id="id_salon" name="id_salon" required>
-              <option value="">--Seleccionar Salon--</option>
+              <option value="">--Seleccionar Sala--</option>
               {% for id, nombre in salones %}
                 <option value="{{ id }}">{{ nombre }}</option>
               {% endfor %}
@@ -130,7 +130,7 @@
             <!-- Selección de la computadora   disabled-->
             <label for="computadora">Selecciona la computadora:</label>
             <select id="computadora" name="computadora"  required>
-              <option value="">-- Primero selecciona un salón --</option>
+              <option value="">-- Primero selecciona una sala --</option>
             </select>
 
             <!-- Subida de fotos -->

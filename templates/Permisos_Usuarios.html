@@ -276,11 +276,11 @@
 
             <!-- ID Salón -->
             <div>
-              <label for="salon_id">ID Salón:</label>
+              <label for="salon_id">ID Sala:</label>
               <input type="text" id="salon_id" name="id_salon" readonly>
             </div>
 
-            <button type="submit">Asignar Salón</button>
+            <button type="submit">Crear Permiso</button>
           </fieldset>
         </form>
       
@@ -289,7 +289,7 @@
       <div class="form-section filtros-combinados">
           <form method="get" action="{{ url_for('permisos_usuarios') }}" class="form-busqueda">
             <fieldset>
-              <legend>Filtros de Usuarios y Salones</legend>
+              <legend>Filtros de Usuarios y Salas</legend>
               <!-- Filtro Usuarios -->
               <label for="search_usuarios">Buscar Usuarios</label>
               <input type="text" id="search_usuarios" name="search_usuarios" placeholder="ID o Email" value="{{ request.args.get('search_usuarios','') }}">
@@ -305,7 +305,7 @@
               </select>
 
               <!-- Filtro Salones -->
-              <label for="search_salones">Buscar Salones</label> 
+              <label for="search_salones">Buscar Salas</label> 
               <input type="text" id="search_salones" name="search_salones" placeholder="ID o Nombre" value="{{ request.args.get('search_salones','') }}">
               <select name="filtro_columna_salones">
                   <option value="id_salon" {% if request.args.get('filtro_columna_salones')=='id_salon' %}selected{% endif %}>ID</option>
@@ -322,7 +322,7 @@
       </div>
 
       <div class="form-section">
-        <h2>Usuarios y Salones</h2>
+        <h2>Usuarios y Salas</h2>
         <div class="tablas-lado-a-lado">
           <!-- Tabla Usuarios -->
           <div class="tabla-wrapper">
@@ -349,7 +349,7 @@
 
           <!-- Tabla Salones -->
           <div class="tabla-wrapper">
-            <h3>Salones</h3>
+            <h3>Salas</h3>
             <table id="tabla_salones">
               <thead>
                 <tr>
