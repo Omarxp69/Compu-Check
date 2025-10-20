@@ -89,14 +89,6 @@ def allowed_file(filename):
 
 #-----------------Correo-----------------------------
 
-# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-# app.config['MAIL_PORT'] = 587
-# app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USE_SSL']  = False
-# app.config['EMAIL_USER'] = os.getenv('EMAIL_USER')
-# app.config['EMAIL_PASS'] = os.getenv('EMAIL_PASS')
-# mail = Mail(app)
-
 def enviar_correo(destinatario, asunto, contenido_html):
     message = SGMail(
         from_email=os.environ.get('SENDGRID_SENDER'),  # tu email verificado en SendGrid
@@ -202,6 +194,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 #------------- lOGUEO DE USUARIO E INICIO DE SESION ---------------------
+
 @app.route("/")
 @logout_required
 def index():
@@ -291,6 +284,7 @@ def register():
 
 
 @app.route('/verify_email/<token>')
+@logout_required
 def verify_email(token):
     conn = get_connection()
     cursor = conn.cursor()
@@ -312,6 +306,7 @@ def verify_email(token):
 
     flash("✅ Correo verificado. Ahora puedes iniciar sesión.")
     return redirect(url_for('login'))
+
 
 @app.route("/forgot_password", methods=["GET", "POST"])
 @logout_required
@@ -506,6 +501,7 @@ def update_profile():
     # Nunca redirijas a login, siempre al dashboard
     return redirect(url_for('perfil'))
 
+
 @app.route('/delete_account', methods=['POST'])
 @login_required
 @role_required('admin', 'moderador', 'user')
@@ -574,6 +570,7 @@ def salas():
         flash("✅ Sala agregada exitosamente.")
     return render_template('salas.html',user_name=user_name,user_role=user_role,user_profile_pic=user_profile_pic)
 
+
 @app.route('/Gestionar_Salas', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -599,6 +596,8 @@ def gestionar_salas():
         orden=orden,
         search=search
     )
+
+
 
 @app.route('/actualizar_sala', methods=['POST'])
 @login_required
@@ -633,6 +632,8 @@ def actualizar_sala():
 
     flash("✅ Estado de la sala actualizado correctamente.")
     return redirect(url_for('gestionar_salas'))
+
+
 
 @app.route('/eliminar_sala', methods=['POST'])
 @login_required
@@ -711,6 +712,7 @@ def eliminar_sala():
             conn.close()
 
 #--------------------------- USUARIOS ----------------------------------
+
 
 
 @app.route('/Gestionar_Usuarios', methods=['GET', 'POST'])
@@ -1323,6 +1325,7 @@ def Eliminar_permiso():
 
 @app.route('/reports', methods=['GET', 'POST'])
 @login_required
+@role_required('admin', 'moderador', 'user')
 def Reportes():
     user = get_current_user()
     user_name=user['name'].capitalize()
@@ -1339,6 +1342,7 @@ def Reportes():
 @app.route('/obtener_computadoras/<int:id_salon>')
 
 @login_required
+@role_required('admin', 'moderador', 'user')
 def obtener_computadoras(id_salon):
     computadoras = obtener_computadora_por_salon(id_salon)
     return jsonify(computadoras)
@@ -1346,6 +1350,7 @@ def obtener_computadoras(id_salon):
 
 @app.route('/guardar_reporte',methods=['POST'])
 @login_required
+@role_required('admin', 'moderador', 'user')
 def guardar_reporte():
     user = get_current_user()
     user_id = int(user['id'])
@@ -1383,8 +1388,6 @@ def guardar_reporte():
 
     flash("✅ Reporte creado correctamente")
     return redirect(url_for('Reportes'))
-
-
 def Realizar_reporte(foto_pantalla,id_pantalla,
                     foto_teclado,id_teclado,
                     foto_mouse,id_mouse
@@ -1436,30 +1439,6 @@ def Realizar_reporte(foto_pantalla,id_pantalla,
         score_teclado, estado_teclado,
         score_mouse, estado_mouse)
 
-#-----------------------EXTRAS-----------------------
-def map_estado(label):
-    return "operativa" if label == "bueno" else "dañada"
-def procesar_foto(file, folder, prefijo, id_item):
-    if file and allowed_file(file.filename):
-        os.makedirs(folder, exist_ok=True)
-
-        # Eliminar fotos anteriores
-        pattern = os.path.join(folder, f"{prefijo}_{id_item}.*")
-        for old_file in glob.glob(pattern):
-            try:
-                os.remove(old_file)
-            except OSError:
-                pass
-
-        # Guardar la nueva foto
-        extension = file.filename.rsplit('.', 1)[1].lower()
-        filename = secure_filename(f"{prefijo}_{id_item}.{extension}")
-        filepath = os.path.join(folder, filename)
-        print(f"Guardando {filepath}...")
-        file.save(filepath)
-        return filepath, f"uploads/{prefijo}/{filename}"
-    print("Archivo no válido o None:", file)
-    return None, None
 
 
 #-----------------------Gestionar reportes-----------------------
@@ -1516,6 +1495,39 @@ def eliminar_reportes():
         return redirect(url_for('gestionar_reportes'))
     eliminar_reporte(reporte_id)
     return redirect(url_for('gestionar_reportes'))
+
+
+
+
+#-----------------------EXTRAS-----------------------
+def map_estado(label):
+    return "operativa" if label == "bueno" else "dañada"
+def procesar_foto(file, folder, prefijo, id_item):
+    if file and allowed_file(file.filename):
+        os.makedirs(folder, exist_ok=True)
+
+        # Eliminar fotos anteriores
+        pattern = os.path.join(folder, f"{prefijo}_{id_item}.*")
+        for old_file in glob.glob(pattern):
+            try:
+                os.remove(old_file)
+            except OSError:
+                pass
+
+        # Guardar la nueva foto
+        extension = file.filename.rsplit('.', 1)[1].lower()
+        filename = secure_filename(f"{prefijo}_{id_item}.{extension}")
+        filepath = os.path.join(folder, filename)
+        print(f"Guardando {filepath}...")
+        file.save(filepath)
+        return filepath, f"uploads/{prefijo}/{filename}"
+    print("Archivo no válido o None:", file)
+    return None, None
+
+
+
+
+
 
 
 

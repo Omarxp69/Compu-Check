@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="../static/css/index_style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Compuchek - Salas</title>
+  <title>Compuchek - Reportes</title>
   <style>
     fieldset.form-group {
       border: 2px solid rgba(37, 99, 235, 0.2);
@@ -82,8 +82,13 @@
           <li class="active"><a href="/reports">📊 Reportes</a></li>
           <li><a href="/Gestionar_reportes">🛠️ Gestionar Reportes</a></li>
         {% elif user_role == 'moderador' %}
+
           <li><a href="/Gestionar_Usuarios">👥 Gestionar Usuarios</a></li>
-          <li><a href="/reports">📊 Reportes</a></li>
+          <li><a href="/Permisos_Usuarios">🔑 Permisos Usuarios</a></li>
+          <li><a href="/Gestionar_Permisos">🛠️ Gestionar Permisos</a></li>
+          <li class="active"><a href="/reports">📊 Reportes</a></li>
+          <li><a href="/Gestionar_reportes">🛠️ Gestionar Reportes</a></li>
+
         {% elif user_role == 'user' %}
           <li class="active"><a href="/reports">📊 Reportes</a></li>
           
@@ -108,7 +113,6 @@
             </div>
           {% endif %}
         {% endwith %}
-
         <form id="formReporte" action="/guardar_reporte" method="POST" enctype="multipart/form-data">
           <fieldset class="form-group">
             <legend>Subir Reporte</legend>
@@ -149,8 +153,6 @@
             <button type="submit" id="btnEnviar" >Hacer Reporte</button>
           </fieldset>
         </form>
-
-
       </section>
 
       <footer>
