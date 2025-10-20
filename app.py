@@ -11,9 +11,21 @@ from tensorflow.keras.applications import MobileNetV2
 
 from flask_mail import Mail, Message
 import secrets
+from threading import Thread
 
 
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+def enviar_async_mail(app, msg):
+    """Envía correos sin bloquear la petición principal"""
+    with app.app_context():
+        mail.send(msg)
 
+
+def enviar_correo_asincrono(asunto, destinatario, html):
+    """Crea y envía un correo usando un hilo"""
+    msg = Message(asunto, sender=app.config['MAIL_USERNAME'], recipients=[destinatario])
+    msg.html = html
+    Thread(target=enviar_async_mail, args=(app, msg), daemon=True).start()
 
 
 
@@ -98,10 +110,6 @@ app.config['MAIL_USERNAME'] = os.getenv('EMAIL_USER')
 app.config['MAIL_PASSWORD'] = os.getenv('EMAIL_PASS')
 
 mail = Mail(app)
-
-
-
-
 
 
 #---------- Roles de usuario y sesiones -------------------
@@ -272,15 +280,9 @@ def register():
 
         verify_url = url_for('verify_email', token=token, _external=True)
 
-        msg = Message(
-            "Confirma tu cuenta",
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
+        html = render_template('email_verify.html', nombre=nombre, verify_url=verify_url)
+        enviar_correo_asincrono("Confirma tu cuenta", email, html)
 
-        # Renderizamos el template con las variables que queremos pasar
-        msg.html = render_template('email_verify.html', nombre=nombre, verify_url=verify_url)
-        mail.send(msg)
         return redirect(url_for('login'))
     return render_template("register.html")
 
@@ -331,13 +333,8 @@ def forgot_password():
             
             # Enviar correo con link
             reset_url = url_for("reset_password", token=token, _external=True)
-            msg = Message(
-                "Restablece tu contraseña",
-                sender=app.config['MAIL_USERNAME'],
-                recipients=[email]
-            )
-            msg.html = render_template("email_reset_password.html", nombre=user[1], reset_url=reset_url)  # <- aquí índice 1
-            mail.send(msg)
+            html = render_template("email_reset_password.html", nombre=user[1], reset_url=reset_url)
+            enviar_correo_asincrono("Restablece tu contraseña", email, html)
 
         # Mensaje genérico para no revelar si existe o no el email
         flash("Se ha enviado un enlace para restablecer tu contraseña.")

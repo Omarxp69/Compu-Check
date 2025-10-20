@@ -7,6 +7,7 @@ import joblib
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
