@@ -438,7 +438,7 @@ def dashboard():
     if not user:
         flash("❌ Debes iniciar sesión")
         return redirect(url_for('login'))
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -527,7 +527,7 @@ def delete_account():
 @role_required('admin', 'moderador', 'user')
 def perfil():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -539,7 +539,7 @@ def perfil():
 @admin_required
 def salas():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -576,7 +576,7 @@ def salas():
 @role_required('admin', 'moderador')
 def gestionar_salas():
     user = get_current_user()
-    user_name = user['name'].capitalize()
+    user_name = user['name'].title()
     user_role = user['role']
     user_profile_pic = user['foto_perfil']
 
@@ -722,7 +722,7 @@ def gestionar_usuarios():
 
 
     user = get_current_user()
-    user_name = user['name'].capitalize()
+    user_name = user['name'].title()
     user_role = user['role']
     user_profile_pic = user['foto_perfil']
    
@@ -787,7 +787,7 @@ def actualizar_usuario():
 @admin_required
 def computadoras():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -862,7 +862,7 @@ def computadoras():
 @admin_required
 def gestionar_computadoras():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -1044,7 +1044,7 @@ def eliminar_computadora():
 @admin_required
 def gestionar_perifericos():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
 
@@ -1197,7 +1197,7 @@ def actualizar_mouse():
 @role_required('admin', 'moderador')
 def permisos_usuarios():
     user = get_current_user()
-    user_name = user['name'].capitalize()
+    user_name = user['name'].title()
     user_role = user['role']
     user_profile_pic = user['foto_perfil']
 
@@ -1269,7 +1269,7 @@ def permisos_usuarios():
 @role_required('admin', 'moderador')
 def gestionar_permisos():
     user = get_current_user()
-    user_name = user['name'].capitalize()
+    user_name = user['name'].title()
     user_role = user['role']
     user_profile_pic = user['foto_perfil']
 
@@ -1328,7 +1328,7 @@ def Eliminar_permiso():
 @role_required('admin', 'moderador', 'user')
 def Reportes():
     user = get_current_user()
-    user_name=user['name'].capitalize()
+    user_name=user['name'].title()
     user_role=user['role']
     user_profile_pic=user['foto_perfil']
     user_id = int(user['id'])
@@ -1449,7 +1449,7 @@ def Realizar_reporte(foto_pantalla,id_pantalla,
 @role_required('admin', 'moderador')
 def gestionar_reportes():
     user = get_current_user()
-    user_name = user['name'].capitalize()
+    user_name = user['name'].title()
     user_role = user['role']
 
     user_profile_pic = user['foto_perfil']
