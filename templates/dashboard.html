@@ -64,6 +64,20 @@
       <header>
         <h1 class="titulo_w">Bienvenido, {{ user_name }}</h1>
       </header>
+      {% if user_role == 'admin' %}
+        <h2>Panel de Administración</h2>
+      {% elif user_role == 'moderador' %}
+        <h2>Panel de Moderación</h2>
+      {% elif user_role == 'user' %}
+        <h2>Panel de Usuario</h2>
+      {% endif %}
+
+
+
+
+
+
+
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           <div class="flash-messages">
