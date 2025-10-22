@@ -103,6 +103,7 @@ def obtener_usuario_por_id(user_id):
     conn.close()
     return user
 
+
 def obtener_todos_Salas(filtro_columna='id_salon', orden='ASC', search=''):
     columnas_permitidas = ['id_salon', 'nombre_salon', 'ubicacion', 'cantidad_equipos', 'estado', 'descripcion', 'fecha_creacion', 'updated_at']
     if filtro_columna not in columnas_permitidas:
