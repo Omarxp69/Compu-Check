@@ -4,13 +4,89 @@
   <link rel="stylesheet" href="../static/css/index_style.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Contenedor principal del texto */
+    .dashboard-main > div {
+      background: linear-gradient(145deg, #f8fafc, #e2e8f0); /* degradado sutil */
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      max-width: 1100px; /* más ancho */
+      margin: 30px auto;
+    }
+
+
+    /* Párrafos */
+    .dashboard-main p {
+      line-height: 1.8;
+      color: #334155; /* gris oscuro legible */
+      margin-bottom: 18px;
+      text-align: justify; /* texto justificado */
+      font-size: 1.05rem;
+    }
+
+    /* Palabras importantes */
+    .dashboard-main strong {
+      font-weight: 600;
+      color: #1d4ed8; /* azul destacado */
+    }
+
+    /* Listas */
+    .dashboard-main ul {
+      margin: 18px 0 22px 40px;
+      padding: 0;
+      list-style-type: disc;
+    }
+
+    .dashboard-main li {
+      margin-bottom: 10px;
+      color: #334155;
+    }
+
+    /* Footer */
+    .dashboard-main footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #64748b;
+    }
+    .manual-container {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .manual-container h1,
+    .manual-container h3,
+    .manual-container p {
+      text-align: center;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .manual-container img {
+      display: block;
+      margin: 10px auto;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+
+
+  </style>
+
+
+
+
+
   
   {% if user_role == 'admin' %}
-    <title>Compuchek - Admin-Dashboard</title>
+    <title>Compucheck - Admin-Dashboard</title>
   {% elif user_role == 'moderador' %}
-    <title>Compuchek - Mod-Dashboard</title>
+    <title>Compucheck - Mod-Dashboard</title>
   {% elif user_role == 'user' %}
-    <title>Compuchek - User-Dashboard</title>
+    <title>Compucheck - User-Dashboard</title>
   {% endif %}
 
   
@@ -28,7 +104,7 @@
         <span>{{ user_name }}</span>
       </div>
 
-      <h2>Compuchek</h2>
+      <h2>Compucheck</h2>
       <ul>
         <li class="active"><a href="/">🏠 Inicio</a></li>
         {% if user_role == 'admin' %}
@@ -87,33 +163,150 @@
           </div>
         {% endif %}
       {% endwith %}
-      <section class="dashboard-info">
-      <h2>Descripción de cada sección:</h2>
-      {% if user_role == 'admin' %}
-        <ul>
-          <li><strong>🛋️ Salas:</strong> Visualiza todas las salas registradas en el sistema.</li>
-          <li><strong>🛠️ Gestionar Salas:</strong> Permite crear, editar o eliminar salas.</li>
-          <li><strong>💻 Computadoras:</strong> Muestra todas las computadoras registradas en cada sala.</li>
-          <li><strong>🛠️ Gestionar Computadoras:</strong> Permite agregar, modificar o eliminar computadoras y sus componentes.</li>
-          <li><strong>👥 Gestionar Usuarios:</strong> Administra los usuarios del sistema, asignando roles y permisos.</li>
-          <li><strong>📊 Reportes:</strong> Visualiza estadísticas y reportes generales del sistema.</li>
-        </ul>
-      {% elif user_role == 'moderador' %}
-        <ul>
-          <li><strong>📋 Revisar reportes:</strong> Evalúa los reportes enviados por los usuarios.</li>
-          <li><strong>⚙️ Gestionar contenido:</strong> Modifica o aprueba contenido del sistema según tus permisos.</li>
-        </ul>
-      {% elif user_role == 'user' %}
-        <ul>
-          <li><strong>💻 Mis computadoras:</strong> Consulta la información de las computadoras asignadas a ti o a tu sala.</li>
-          <li><strong>📝 Enviar reporte:</strong> Envía reportes sobre incidencias o problemas con computadoras o salas.</li>
-        </ul>
-      {% endif %}
-    </section>
+      <div class="manual-container">
+        <h1 class="titulo_w">Manual de usuario</h1>
+        <div><h3>1. 🏠 Inicio</h3>
+        <p>Este es la ventana principal de la pagina web</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/21e1c693-b236-4d7c-8c2a-5c743f57c15b/8fe1fe4a-3edc-4524-9bf2-61606f240084.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🏠 Inicio" />
+        </div>
+
+        <div><h3>2. 📝 Regístrate</h3>
+        <p>Apartado para registrarte, ingresa tus datos y recibirás un correo electrónico en spam para poder iniciar sesión </p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/95fd400e-d802-4a23-a888-2f4f4f42152e/c5eef203-0f8f-40d4-a6a0-fe69b298ecf0.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="📝 Regístrate" />
+        </div>
+
+        <div><h3>3. 🔑 Iniciar sesión </h3>
+        <p>Después de realizar el registro y verificar el correo electrónico, iniciamos sesión con los datos que utilizamos para registrar.</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/ae18fa79-0238-4303-a129-65aee9f07dbc/fc1ff636-94cb-479b-9fb7-c3893f62a2a1.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🔑 Iniciar sesión " />
+        </div>
+
+        <div><h3>4. 📊 Reportes</h3>
+        <p>Como usuario podemos generar reportes</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/204f2a2e-c3a9-4664-b0c1-b2852a5df3e9/8948ad56-deca-4e1e-abcf-72f0137cb2aa.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=53&mark-y=242&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0yNzcmaD02NyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="📊 Reportes" />
+        </div>
+
+        <div><h3>5. -> Selecciona una de las salas ya creadas por algún administrador para empezar a generar el reporte.</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/93bd466f-bef3-4c61-ab31-3700d1e1f352/d9512ef6-fc53-47a4-9773-283b352803e6.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=118&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD02MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Selecciona una de las salas ya creadas por algún administrador para empezar a generar el reporte." />
+        </div>
+
+        <div><h3>6. -> Selecciona la computadora que se encuentra en la sala para generar el reporte</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/05707643-5627-4a39-9326-193238560b18/29094801-45e0-4719-9b53-ed617030ec9b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=222&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD02MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Selecciona la computadora que se encuentra en la sala para generar el reporte" />
+        </div>
+
+        <div><h3>7. -> Seleccionamos un archivo para capturar la pantalla </h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/bded96ca-a376-493f-aec3-4081caafc059/0b70ccb0-6da6-47fe-abc9-83b71af4d0fd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=205&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD02NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Seleccionamos un archivo para capturar la pantalla " />
+        </div>
+
+        <div><h3>8. -> Seleccionamos un archivo para capturar el teclado</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/8c6b75cb-82ec-412f-86c6-71e8d0ef41bf/42165341-4656-46b3-99b0-aa1436f50357.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=315&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD02NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Seleccionamos un archivo para capturar el teclado" />
+        </div>
+
+        <div><h3>9. -> Seleccionamos un archivo para capturar el mouse</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/4c94c153-d4b3-4507-a0f1-45d3010f0fd8/12a5860c-1d9e-44c3-98e8-8f08eeb69352.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=424&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD02NCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Seleccionamos un archivo para capturar el mouse" />
+        </div>
+
+        <div><h3>10. -> Se puede agregar comentarios sobre el estado del equipo para después darle en "Hacer Reporte"</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/1c5584a3-bb7f-449d-b897-7c8634a9ddea/4ce7bbf6-91cf-41e7-8de3-db74b607f7f8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=423&mark-y=416&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz02ODEmaD0xMDImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Se puede agregar comentarios sobre el estado del equipo para después darle en &quot;Hacer Reporte&quot;" />
+        </div>
+
+        <div><h3>11. ✏️ Editar Perfil</h3>
+        <p>En editar perfil podemos cambiar la <span data-name="frame_with_picture" data-type="emoji">🖼</span> Foto de perfil después de seleccionar el archivo damos a actualizar foto.</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/9145f421-e6b8-4eff-bed4-d59cda2f9884/c79b8fca-e9ab-4501-996b-e750a9eac062.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=395&mark-y=219&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz03MzcmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="✏️ Editar Perfil" />
+        </div>
+
+        <div><h3>12. -> Podemos actualizar la 🎂 Fecha de nacimiento del usuario,
+        Agregar el ⚧️Genero de el usuario y  ❌Eliminar tu cuenta </h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/d204a4d5-9244-4436-90db-6d0f36d4f837/6c51f9bd-1f8b-4b3e-9f0a-42a327fdf777.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=395&mark-y=327&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz03MzcmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Podemos actualizar la 🎂 Fecha de nacimiento del usuario,
+        Agregar el ⚧️Genero de el usuario y  ❌Eliminar tu cuenta " />
+        </div>
+
+        <div><h3>13.  👥 Gestionar Usuarios - Moderador</h3>
+        <p>Podemos buscar un usuario por ID, NOMBRE, APELLIDOS, EMAIL ROL, ESTADO, FECHA DE CREACION Y ACTUALIZACION</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/0c29cc32-9d5d-45be-9e28-93a4efb46b78/f9f46f8a-6fd2-4268-b1e6-734e0fd72df8.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=501&mark-y=9&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0yNzUmaD01NyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt=" 👥 Gestionar Usuarios - Moderador" />
+        </div>
+
+        <div><h3>14. 🛠️ Gestionar Salas - Moderador</h3>
+        <p>Podemos visualizar las salas en el sistema por medio de los siguientes filtros -&gt; buscar una sala por ID, NOMBRE, APELLIDOS, EMAIL, UBICACION, ESTADO, FECHA DE CREACION Y ACTUALIZACION</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/ca32f902-241f-4b3e-8fd4-ad63c77482b1/5e39e697-f45a-47cd-b83c-5969bee38f22.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=501&mark-y=178&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0yNzUmaD01NyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Salas - Moderador" />
+        </div>
+
+        <div><h3>15. 🔑 Permisos Usuarios - Admin/Moderador</h3>
+        <p>Los Administradores y moderadores pueden darle a los usuarios un permiso para realizar reportes en diferentes salas</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/afc4a698-bd27-4f83-8e8b-08ed3878be6e/0496e4a7-6387-4a00-bbe4-f1f4aebe3526.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=370&mark-y=60&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz03ODgmaD0xMTQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🔑 Permisos Usuarios - Admin/Moderador" />
+        </div>
+
+        <div><h3>16. -> Podemos filtrar usuarios y salas</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/6317f46f-3663-4a5e-8579-17e6dc121f1a/d0b6ed75-4fbc-4046-8b7e-e84e76825071.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=435&mark-y=337&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0zMjkmaD00MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Podemos filtrar usuarios y salas" />
+        </div>
+
+        <div><h3>17. -> Podemos visualizar los usuarios y las salas que queremos asignar permisos</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/be746f50-8c55-4c94-a759-2e6a5a09bd90/d27fbb6f-5e25-40f4-80d0-3f4132cce885.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6363&fp-y=0.5807&fp-z=1.4887&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=50&mark-y=334&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTAwJmg9NzEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Podemos visualizar los usuarios y las salas que queremos asignar permisos" />
+        </div>
+
+        <div><h3>18. 🛠️ Gestionar Permisos - Admin/Moderador</h3>
+        <p>Podemos Gestionar Permisos, como eliminar los permisos otorgados</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/abf0474b-8e61-4ee1-b803-0bd950daa100/615cd6ed-287c-42e6-a881-f733cd48c528.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=370&mark-y=60&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz04MjYmaD0xMTQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Permisos - Admin/Moderador" />
+        </div>
+
+        <div><h3>19. 🛠️ Gestionar Reportes - Admin/Moderador</h3>
+        <p>Podemos Gestionar Reportes, como eliminar los reportes creados </p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/b0c8288d-c757-415a-af98-04d54284f353/3d14fe6d-d326-4c74-a801-c9046d5c0892.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=5&mark-y=60&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0xMTkwJmg9MTE0JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Reportes - Admin/Moderador" />
+        </div>
+
+        <div><h3>20. 🏠 Inicio - Admin</h3>
+        <p>Dashboard de administradores </p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/74be1496-c673-4cb1-83a5-bcd3101fc952/bc192640-c745-4f28-80d2-0bfc628f2a54.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6363&fp-y=0.1582&fp-z=1.4451&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=31&mark-y=86&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTM5Jmg9MTY1JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🏠 Inicio - Admin" />
+        </div>
+
+        <div><h3>21. 👥 Gestionar Usuarios  - Admin</h3>
+        <p>Los administradores pueden Modificar los roles y activar y desactivar la cuenta de todos los usuarios en el sistema usuario</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/8f9d9318-5bf8-4664-85c0-e050758e843a/42ad64b0-ac7a-4025-8f77-48e2467aa616.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="👥 Gestionar Usuarios  - Admin" />
+        </div>
+
+        <div><h3>22. 🛋️ Salas - Admin</h3>
+        <p>Los administradores tienen el apartado de salas donde se pueden crear salas nuevas en la base de datos</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/0b5ac829-559a-44ea-a7a0-7c8e4aea6663/2de5072d-c350-4ac5-9d45-a69880af068a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4291&fp-y=0.7603&fp-z=2.2076&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=397&mark-y=303&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00MDUmaD0xMzImZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛋️ Salas - Admin" />
+        </div>
+
+        <div><h3>23. 🛠️ Gestionar Salas </h3>
+        <p>Aqui los administradores pueden Modificar los estados de las salas y eliminar salas</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/74f33915-92f7-42c9-9a65-39cc0d527d8b/4de03896-9100-4ee0-ba52-867a3d063417.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Salas " />
+        </div>
+
+        <div><h3>24. -> Visualización de las salas existentes en la base de datos</h3>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/264dcd75-613c-4037-a1e1-94d50ac9a170/3cd1384e-bb4d-4125-9669-c1a5676cfd94.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="-&gt; Visualización de las salas existentes en la base de datos" />
+        </div>
+
+        <div><h3>25. 💻 Computadoras - Admin</h3>
+        <p>Aqui los administradores Pueden Crear Computadoras y asignarlas a una sala </p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/a67bedd8-c6d4-4d30-b3a6-cd8831b62ce5/59f0dc45-dffd-47e1-9d97-d59f239deb29.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=370&mark-y=60&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz03ODgmaD0xMTQmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="💻 Computadoras - Admin" />
+        </div>
+
+        <div><h3>26. 🛠️ Gestionar Computadoras</h3>
+        <p>En este apartado se visualizan las computadoras que hay en la base de datos y se puede modificar su estado</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/793db146-8b36-4e64-a41b-70bf1cdce79d/89f47aa3-781c-449a-ae2b-82a0df227688.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Computadoras" />
+        </div>
+
+        <div><h3>27. 🛠️ Gestionar Periféricos - Admin</h3>
+        <p>En esta sección los administradores pueden modificar cada periférico de una computadora</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/a9422230-db1b-4280-96db-c0701c1bb4f7/516005a6-97de-42a1-bce9-f0144a9dd29c.png?fm=png&crop=focalpoint&fit=crop&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Periféricos - Admin" />
+        </div>
+
+        <div><h3>28. 🛠️ Gestionar Periféricos - Admin</h3>
+        <p>Aqui se pueden visualizar los periféricos que están en la base de datos</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/49492a12-c3c4-4738-b68f-058313915d4a/a9914376-f0fd-438c-83ed-9ba90676f741.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Periféricos - Admin" />
+        </div>
+
+        <div><h3>29. 🛠️ Gestionar Reportes - Admin</h3>
+        <p>Aqui se pueden Visualizar los reportes creados en el sistema</p>
+        <img src="https://images.tango.us/workflows/8889a725-af76-4df3-8ab3-14f1c8487bf4/steps/423fa9fe-aa9b-4df4-89d5-57bedd7820bf/fb69ca25-824e-4d7f-88d9-572d625ce3bc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n" style="border-radius: 8px; border: 1px solid #F4F2F7;" width="600" alt="🛠️ Gestionar Reportes - Admin" />
+        </div>
+      </div>
+
 
       
       <footer>
-        &copy; 2025 Compuchek. Todos los derechos reservados.
+        &copy; 2025 Compucheck. Todos los derechos reservados.
       </footer>
     </main>
   </div>
