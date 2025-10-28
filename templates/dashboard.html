@@ -81,6 +81,57 @@
         border-radius: 10px;
         border: 1px solid #e2e8f0;
       }
+
+      
+      @media (max-width: 768px) {
+        .dashboard-main > div {
+          padding: 20px;
+          margin: 15px;
+          max-width: 100%;
+          box-shadow: none;
+          border-radius: 8px;
+        }
+
+        .manual-container h1,
+        .manual-container h3,
+        .manual-container p {
+          max-width: 100%;
+          padding: 0 10px;
+        }
+
+        .manual-container img {
+          width: 100%;
+          max-width: 100%;
+          height: auto;
+          border-radius: 6px;
+        }
+
+        .sidebar {
+          width: 100%;
+          position: relative;
+          text-align: center;
+        }
+
+        .sidebar ul {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0;
+        }
+
+        .dashboard-container {
+          display: flex;
+          flex-direction: column;
+        }
+
+        h1, h3 {
+          font-size: 1.2rem;
+        }
+
+        p {
+          font-size: 0.95rem;
+        }
+      }
     </style>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
