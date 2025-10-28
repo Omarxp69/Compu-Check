@@ -123,6 +123,34 @@
           font-size: 0.95rem;
         }
       }
+      @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        position: relative;
+        text-align: left; /* Alinea el texto a la izquierda */
+        padding-left: 15px; /* Da un pequeño margen visual */
+      }
+
+      .sidebar ul {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Los elementos también a la izquierda */
+        padding-left: 10px;
+      }
+
+      .sidebar ul li {
+        width: 100%;
+      }
+
+      .sidebar ul li a {
+        display: block;
+        width: 100%;
+      }
+    }
+
+
+
+
   </style>
 
 </head>
