@@ -233,7 +233,9 @@ def clasificar_dispositivos(file_pantalla, file_teclado, file_mouse):
             'score_good': r['score_good'],
             'timestamp': r['timestamp']
         }
-
+    print("\n=== RESULTADOS IA ===")
+    for nombre, r in resultados.items():
+        print(f"{nombre.upper():10} | {r['label']:8} | Probabilidad bueno: {r['score_good']:.2f} | {r['timestamp']}")
     return resultados
 
 def map_estado(label):
