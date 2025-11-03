@@ -23,8 +23,7 @@ base_model = None
 def get_model():
     global base_model
     if base_model is None:
-        base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160, 160, 3))
-        base_model.load_weights('model_weights/mobilenet_v2.weights.h5')
+        base_model = MobileNetV2(weights='imagenet', include_top=False, pooling="avg", input_shape=(160, 160, 3))
     return base_model
 
 
@@ -45,10 +44,7 @@ os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(REPORT_DIR, exist_ok=True)
 
 IMAGE_SIZE = (160, 160)
-base_model = MobileNetV2(weights=None, include_top=False, pooling="avg", input_shape=(160, 160, 3))
 
-# Carga los pesos locales
-base_model.load_weights('model_weights/mobilenet_v2.weights.h5')
 
 # ===== FUNCIONES DE PROCESAMIENTO =====
 
@@ -64,6 +60,10 @@ def extract_embedding(img_path):
     """Extrae el embedding (vector de características) de una imagen."""
     arr = load_and_preprocess(img_path)
     model = get_model()
+
+    print("✅ Pesos cargados:", len(model.weights))
+    print("🧠 Primer peso:", model.weights[0].name, model.weights[0].shape)
+    
     return model.predict(arr, verbose=0).reshape(-1)
 
 
